@@ -1,0 +1,94 @@
+{
+  "feature_order": [
+    "Age_rank",
+    "Sex",
+    "Education",
+    "Race",
+    "Activities",
+    "Hearing",
+    "TG",
+    "Tinnitus",
+    "CHO",
+    "Dairy",
+    "Smoke",
+    "Fruit"
+  ],
+  "mappings": {
+    "Age_rank": {
+      "20-24 years old": -1.6035674514745464,
+      "25-29 years old": -1.3363062095621219,
+      "30-34 years old": -1.0690449676496976,
+      "35-39 years old": -0.8017837257372732,
+      "40-44 years old": -0.5345224838248488,
+      "45-49 years old": -0.2672612419124244,
+      "50-54 years old": 0.0,
+      "55-59 years old": 0.2672612419124244,
+      "60-64 years old": 0.5345224838248488,
+      "65-69 years old": 0.8017837257372732,
+      "70-74 years old": 1.0690449676496976,
+      "75-80 years old": 1.3363062095621219,
+      "80+ years old": 1.6035674514745464
+    },
+    "Sex": {
+      "Male": -1.0,
+      "Female": 1.0
+    },
+    "Education": {
+      "Illiterate": -1.4638501094227998,
+      "Primary School": -0.8783100656536799,
+      "Junior High School (Technical School)": -0.29277002188455997,
+      "Senior High School (Technical Secondary School)": 0.29277002188455997,
+      "College/University (Bachelor’s Degree)": 0.8783100656536799,
+      "Postgraduate (Master’s Degree or Higher)": 1.4638501094227998
+    },
+    "Race": {
+      "Han Chinese": -0.823895713812499,
+      "Korean ethnic group": -0.20574516757314676,
+      "Yao ethnic group": 1.6871652292408388,
+      "Other ethnic group": -0.6575243478551939
+    },
+    "Activities": {
+      "Light-intensity (e.g. office work)": -1.224744871391589,
+      "Moderate-intensity (e.g. mechanical operations)": 0.0,
+      "Vigorous-intensity (e.g. construction hauling)": 1.224744871391589
+    },
+    "Hearing": {
+      "Normal": -1.224744871391589,
+      "Impaired": 0.0,
+      "Severely impaired": 1.224744871391589
+    },
+    "TG": {
+      "appropriate<(0-1.7)": -1.224744871391589,
+      "mild raised (1.7-2.3)": 0.0,
+      "high (>=2.3)": 1.224744871391589
+    },
+    "Tinnitus": {
+      "No tinnitus": -1.0,
+      "Experienced tinnitus lasting >5 minutes in the past year": 1.0
+    },
+    "CHO": {
+      "appropriate<(0-5.2)": -1.224744871391589,
+      "mild raisede(5.2-6.2)": 0.0,
+      "high (>=6.2)": 1.224744871391589
+    },
+    "Dairy": {
+      "5-7 days per week": -1.414213562373095,
+      "3-4 days per week": -0.7071067811865475,
+      "1-2 days per week": 0.0,
+      "≤3 days per month": 0.7071067811865475,
+      "Never": 1.414213562373095
+    },
+    "Smoke": {
+      "Never smoked": -1.224744871391589,
+      "Current smoker": 0.0,
+      "Former smoker": 1.224744871391589
+    },
+    "Fruit": {
+      "5-7 days per week": -1.414213562373095,
+      "3-4 days per week": -0.7071067811865475,
+      "1-2 days per week": 0.0,
+      "≤3 days per month": 0.7071067811865475,
+      "Never": 1.414213562373095
+    }
+  }
+}
