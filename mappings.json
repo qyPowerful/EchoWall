@@ -38,8 +38,8 @@
       "Primary School": -0.8783100656536799,
       "Junior High School (Technical School)": -0.29277002188455997,
       "Senior High School (Technical Secondary School)": 0.29277002188455997,
-      "College/University (Bachelor’s Degree)": 0.8783100656536799,
-      "Postgraduate (Master’s Degree or Higher)": 1.4638501094227998
+      "College": 0.8783100656536799,
+      "Postgraduate": 1.4638501094227998
     },
     "Race": {
       "Han Chinese": -0.823895713812499,
