@@ -712,20 +712,6 @@
 
             console.log('All components loaded successfully.');
         });
-
-        function predict() {
-            // Check if all required fields are filled
-            const requiredFields = document.querySelectorAll('select[required]');
-            for (const field of requiredFields) {
-                if (!field.value) {
-                    alert('Please fill in all required fields.');
-                    return;
-                }
-            }
-
-            // Your prediction logic here
-            // ...
-        }
     </script>
 </body>
 </html>
