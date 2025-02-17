@@ -63,7 +63,7 @@ let isLoading = true; // 添加加载状态标志
 const idToFeature = {
     'age_rank': 'Age_rank',
     'sex': 'Sex',
-    'education': 'Education',
+    'Education': 'Education',  // 改成大写
     'race': 'Race',
     'activities': 'Activities',
     'hearing': 'Hearing',
@@ -92,7 +92,7 @@ function updateProgressIndicator(step) {
 function validateInputs() {
     console.log('验证输入字段...');
     const requiredFields = [
-        'age_rank', 'sex', 'education', 'race',
+        'age_rank', 'sex', 'Education', 'race',  // 改成大写
         'activities', 'dairy', 'fruit', 'smoke',
         'hearing', 'tinnitus', 'tg', 'cho'
     ];
@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', function() {
             updateProgressIndicator(1);
             
             // 如果第一部分的所有字段都已填写，激活第二个进度点
-            const firstSection = ['age_rank', 'sex', 'education', 'race'];
+            const firstSection = ['age_rank', 'sex', 'Education', 'race'];  // 改成大写
             const firstSectionComplete = firstSection.every(id => 
                 document.getElementById(id).value !== ''
             );
