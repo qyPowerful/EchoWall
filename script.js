@@ -1,4 +1,5 @@
-// script.js
+// ============= 保存原始predict函数 =============
+const originalPredict = window.predict;
 
 // ============= 全局变量 =============
 let mappings = null;
@@ -25,13 +26,13 @@ function error(message, err = null) {
 // 检查model.js是否正确加载
 function checkModel() {
     log('检查model.js加载状态');
-    log('originalPredict 是否存在:', typeof window.originalPredict === 'function');
+    log('originalPredict 是否存在:', typeof originalPredict === 'function');
     
-    if (typeof window.originalPredict === 'function') {
+    if (typeof originalPredict === 'function') {
         try {
             const testInput = new Array(12).fill(0);
             log('测试模型输入:', testInput);
-            const testResult = window.originalPredict(testInput);
+            const testResult = originalPredict(testInput);
             log('模型测试结果:', testResult);
             return true;
         } catch (e) {
@@ -71,7 +72,7 @@ function collectInputs() {
     
     // 收集原始输入
     features.forEach(feature => {
-        const element = document.getElementById(feature);
+        const element = document.getElementById(feature.toLowerCase());
         if (element) {
             inputs[feature] = element.value;
             log(`收集到输入 ${feature} = ${element.value}`);
@@ -139,7 +140,7 @@ window.predict = function() {
         
         // 调用模型预测
         log('调用模型预测');
-        const probability = window.originalPredict(inputArray);
+        const probability = originalPredict(inputArray);
         log('预测结果:', probability);
         
         // 验证预测结果
@@ -179,8 +180,7 @@ window.addEventListener('load', function() {
     log('页面加载完成');
     log('检查组件加载状态');
     log('window.predict =', window.predict);
-    log('window.originalPredict =', window.originalPredict);
-    log('window.mappings =', window.mappings);
+    log('originalPredict =', originalPredict);
     
     // 检查模型
     if (checkModel()) {
