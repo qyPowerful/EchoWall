@@ -48,6 +48,9 @@ window.predict = function() {
         // 更新结果显示
         updateResults(probability);
 
+        // 预测完成后，更新进度指示器到第四步
+        updateProgressIndicator(4);
+
     } catch (error) {
         console.error('预测过程出错:', error);
         alert('Prediction error: ' + error.message);
