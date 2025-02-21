@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>High-Frequency Hearing Loss Prediction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4A90E2;
+            --primary-light: #6BA4E9;
+            --primary-dark: #357ABD;
+            --secondary-color: #F7B733;
+            --success-color: #2ECC71;
+            --warning-color: #E67E22;
+            --danger-color: #E74C3C;
+            --text-primary: #2C3E50;
+            --text-secondary: #7F8C8D;
+            --background-primary: #F5F7FA;
+            --background-secondary: #FFFFFF;
+            --border-radius: 16px;
+            --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: var(--background-primary);
+            color: var(--text-primary);
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(74, 144, 226, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(247, 183, 51, 0.05) 0%, transparent 20%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--background-secondary);
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px;
+            background: linear-gradient(135deg, #EBF4FF 0%, #FFFFFF 100%);
+            border-radius: var(--border-radius);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .header-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .header h1 {
+            color: var(--primary-color);
+            font-size: 36px;
+            margin: 0 0 20px;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 16px;
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            margin: 40px 0;
+            padding: 20px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .progress-step {
+            display: flex;
+            align-items: center;
+            position: relative;
+            margin: 0 30px;
+        }
+
+        .progress-step::after {
+            content: '';
+            position: absolute;
+            right: -35px;
+            width: 40px;
+            height: 2px;
+            background: #E2E8F0;
+        }
+
+        .progress-step:last-child::after {
+            display: none;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            color: var(--primary-color);
+            margin-right: 12px;
+            transition: var(--transition);
+        }
+
+        .step-number.active {
+            background: var(--primary-color);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.2);
+        }
+
+        .step-label {
+            font-size: 15px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .form-section {
+            background: white;
+            padding: 40px;
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            border: 1px solid rgba(74, 144, 226, 0.1);
+        }
+
+        .form-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-section h2 {
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(74, 144, 226, 0.1);
+        }
+
+        .section-icon {
+            margin-right: 12px;
+            font-size: 24px;
+            color: var(--primary-color);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 每行显示两个选项框 */
+            gap: 30px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column; /* 垂直排列标签和选项框 */
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 15px;
+            margin-bottom: 8px; /* 增加标签和选项框之间的间距 */
+        }
+
+        .form-control {
+            width: 100%; /* 选项框占据整个容器宽度 */
+            padding: 12px 15px;
+            border: 2px solid #E2E8F0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: var(--transition);
+            background: white;
+            color: var(--text-primary);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 16px;
+            cursor: pointer;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
+            outline: none;
+        }
+
+        .form-control:hover {
+            border-color: var(--primary-light);
+        }
+
+        .hint {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            background: rgba(74, 144, 226, 0.05);
+            border-radius: 8px;
+        }
+
+        .hint i {
+            margin-right: 8px;
+            color: var(--primary-color);
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: white;
+            border: none;
+            padding: 16px 45px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 50px auto;
+            min-width: 250px;
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.2);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 144, 226, 0.3);
+        }
+
+        .submit-btn i {
+            margin-right: 10px;
+        }
+
+        .result-container {
+            display: none;
+            margin-top: 50px;
+            padding: 40px;
+            border-radius: var(--border-radius);
+            background: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .result-container.show {
+            display: block;
+            animation: slideUp 0.6s ease;
+        }
+
+        .risk-meter {
+            width: 250px;
+            height: 250px;
+            margin: 30px auto;
+            position: relative;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        .risk-meter:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .risk-percentage {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            animation: countUp 1s ease-out;
+        }
+
+        .risk-label {
+            font-size: 18px;
+            color: var(--text-secondary);
+        }
+
+        .risk-description {
+            color: var(--text-secondary);
+            margin: 30px auto;
+            max-width: 800px;
+            line-height: 1.8;
+            padding: 30px;
+            background: rgba(74, 144, 226, 0.05);
+            border-radius: var(--border-radius);
+        }
+
+        .recommendations {
+            margin-top: 50px;
+        }
+
+        .recommendations h3 {
+            color: var(--primary-color);
+            font-size: 24px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+        }
+
+        .recommendations h3 i {
+            margin-right: 12px;
+        }
+
+        .recommendations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .recommendation-item {
+            background: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            border: 1px solid rgba(74, 144, 226, 0.1);
+        }
+
+        .recommendation-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .recommendation-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .recommendation-icon i {
+            color: white;
+            font-size: 24px;
+        }
+
+        .recommendation-title {
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .recommendation-desc {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes countUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 28px;
+            }
+
+            .progress-indicator {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .progress-step {
+                margin: 10px 0;
+            }
+
+            .progress-step::after {
+                display: none;
+            }
+
+            .form-section {
+                padding: 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr; /* 在小屏幕上，每行显示一个选项框 */
+                gap: 20px;
+            }
+
+            .recommendations-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .risk-meter {
+                width: 180px;
+                height: 180px;
+            }
+
+            .risk-percentage {
+                font-size: 36px;
+            }
+
+            .submit-btn {
+                font-size: 16px;
+                padding: 12px 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <i class="fas fa-stethoscope header-icon"></i>
+            <h1>High-Frequency Hearing Loss Prediction</h1>
+            <p>Personalized high-frequency hearing loss risk prediction system based on machine learning model. This prediction is for reference only. If you have any concerns, please seek medical attention in time.</p>
+
+            <div class="progress-indicator">
+                <div class="progress-step">
+                    <div class="step-number active">1</div>
+                    <span class="step-label">Basic Information</span>
+                </div>
+                <div class="progress-step">
+                    <div class="step-number">2</div>
+                    <span class="step-label">Lifestyle Habits</span>
+                </div>
+                <div class="progress-step">
+                    <div class="step-number">3</div>
+                    <span class="step-label">Medical History</span>
+                </div>
+                 <div class="progress-step">
+                    <div class="step-number">4</div>
+                    <span class="step-label">Clinical Test Results</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第一部分：基本信息 -->
+        <div class="form-section">
+            <h2>
+                <i class="fas fa-user-md section-icon"></i>
+                Basic Information
+            </h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="age_rank">Age Rank</label>
+                    <select id="age_rank" class="form-control" required>
+                        <option value="">Select Age Rank</option>
+                        <option value="0">20-24 years old</option>
+                        <option value="1">25-29 years old</option>
+                        <option value="2">30-34 years old</option>
+                        <option value="3">35-39 years old</option>
+                        <option value="4">40-44 years old</option>
+                        <option value="5">45-49 years old</option>
+                        <option value="6">50-54 years old</option>
+                        <option value="7">55-59 years old</option>
+                        <option value="8">60-64 years old</option>
+                        <option value="9">65-69 years old</option>
+                        <option value="10">70-74 years old</option>
+                        <option value="11">75-80 years old</option>
+                        <option value="12">80+ years old</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="sex">Gender</label>
+                    <select id="sex" class="form-control" required>
+                        <option value="">Select Gender</option>
+                        <option value="1">Male</option>
+                        <option value="2">Female</Female>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="Education">Education Level</label>
+                    <select id="Education" class="form-control" required>
+                        <option value="">Select Education Level</option>
+                        <option value="1">Elementary school or lower</option>
+                        <option value="2">Primary</Primary>
+                        <option value="3">Secondary</Secondary>
+                        <option value="4">College</College>
+                        <option value="5">Higher</College>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="race">Race</label>
+                    <select id="race" class="form-control" required>
+                        <option value="">Select Race</option>
+                        <option value="1">Han Chinese</option>
+                        <option value="2">Korean ethnic group</option>
+                        <option value="3">Yao ethnic group</option>
+                        <option value="4">Other ethnic group</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第二部分：生活习惯 -->
+        <div class="form-section">
+            <h2>
+                <i class="fas fa-walking section-icon"></i>
+                Lifestyle Habits
+            </h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="activities">Physical Labor</label>
+                    <select id="activities" class="form-control" required>
+                        <option value="">Select Activity Level</option>
+                        <option value="3">High</option>
+                        <option value="2">Moderate</Moderate>
+                        <option value="1">Low</Low>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="dairy">Frequency of Dairy Products Consumption</label>
+                    <select id="dairy" class="form-control" required>
+                        <option value="">Select Intake Frequency</option>
+                        <option value="1">5-7 days per week</option>
+                        <option value="2">3-4 days per week</option>
+                        <option value="3">1-2 days per week</option>
+                        <option value="4">≤3 days per month</option>
+                        <option value="5">Never eat</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="alcohol">Alcohol Consumption Status</label>
+                    <select id="alcohol" class="form-control" required>
+                        <option value="">Select Alcohol Consumption Status</option>
+                        <option value="2">Current</option>
+                        <option value="1">Former</Former>
+                        <option value="0">Never</Never>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="smoke">Smoking Status</label>
+                    <select id="smoke" class="form-control" required>
+                        <option value="">Select Smoking Status</option>
+                        <option value="2">Current</option>
+                        <option value="1">Former</Former>
+                        <option value="0">Never</Never>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第三部分：健康状况 -->
+        <div class="form-section">
+            <h2>
+                <i class="fas fa-notes-medical section-icon"></i>
+                Medical History
+            </h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="hearing">Self-reported Hearing Status</label>
+                    <select id="hearing" class="form-control" required>
+                        <option value="">Select Hearing Condition</option>
+                        <option value="0">Good</option>
+                        <option value="2">Fair</Fair>
+                        <option value="3">Poor</Poor>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="tinnitus">Tinnitus Duration (≥ 5 minutes/year)</label>
+                    <select id="tinnitus" class="form-control" required>
+                        <option value="">Select Tinnitus Status</option>
+                        <option value="1">Yes</Yes>
+                        <option value="0">No</No>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="hbp">Systolic Blood Pressure</label>
+                    <select id="hbp" class="form-control" required>
+                        <option value="">Select Systolic Blood Pressure</option>
+                        <option value="0">&lt; 140mmHg</option>
+                        <option value="1">140-159mmHg</option>
+                        <option value="2">160-179mmHg</option>
+                        <option value="3">≥180mmHg</option>
+                    </select>
+                </div>
+
+                <!-- 添加一个空的 div 元素，以填充 Medical History 标签页的空缺 -->
+                <div class="form-group"></div>
+            </div>
+        </div>
+
+         <!-- 第四部分： 临床测试结果 -->
+        <div class="form-section">
+            <h2>
+                <i class="fas fa-vial section-icon"></i>
+                Clinical Test Results
+            </h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="tg">Triglycerides (mmol/L)</label>
+                    <select id="tg" class="form-control" required>
+                        <option value="">Select Triglyceride Level</option>
+                        <option value="0">&lt; 1.7</option>
+                        <option value="1">≥ 1.7 and &lt; 2.3</option>
+                        <option value="2">≥ 2.3</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="cho">Cholesterol (mmol/L)</label>
+                    <select id="cho" class="form-control" required>
+                        <option value="">Select Cholesterol Level</option>
+                        <option value="0">&lt; 5.2</option>
+                        <option value="1">≥ 5.2 and &lt; 6.2</option>
+                        <option value="2">≥ 6.2</option>
+                    </select>
+                </div>
+
+                 <div class="form-group">
+                    <label for="glu">Fasting Blood Glucose (mmol/L)</label>
+                    <select id="glu" class="form-control" required>
+                        <option value="">Select Fasting Blood Glucose Level</option>
+                        <option value="0">&lt; 5.6 mmol/L</option>
+                        <option value="1">5.6 - 6.9 mmol/L</option>
+                        <option value="2">≥ 7.0 mmol/L</option>
+                    </select>
+                </div>
+
+                 <div class="form-group">
+                    <label for="bmi">Body Mass Index (BMI)</label>
+                    <select id="bmi" class="form-control" required>
+                        <option value="">Select Body Mass Index Level</option>
+                        <option value="0">&lt; 18.5</option>
+                        <option value="1">18.5 ≤ BMI &lt; 24.9</option>
+                        <option value="2">25 ≤ BMI</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <button class="submit-btn" onclick="predict()">
+            <i class="fas fa-stethoscope"></i>
+            Start Prediction
+        </button>
+
+        <div class="result-container" id="result">
+            <div class="risk-meter">
+                <div class="risk-percentage" id="risk-value">--</div>
+                <div class="risk-label">Risk Level</div>
+            </div>
+
+            <div class="risk-description">
+                Based on the information you provided, our machine learning model analysis indicates that your risk of developing high-frequency hearing loss is
+                <strong id="risk-percentage">--</strong>.
+                <br><br>
+                <small>* This prediction is based on a statistical model and is for reference only. It should not be used as a medical diagnosis. If you have concerns about your hearing health, it is recommended to seek medical attention for examination.</small>
+            </div>
+
+            <div class="recommendations">
+                <h3>
+                    <i class="fas fa-clipboard-list"></i>
+                    Professional Recommendations
+                </h3>
+                <div class="recommendations-grid">
+                    <div class="recommendation-item">
+                        <div class="recommendation-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="recommendation-title">Regular Check-ups</div>
+                        <div class="recommendation-desc">It is recommended to have a professional hearing test once a year to understand your hearing health.</div>
+                    </div>
+
+                    <div class="recommendation-item">
+                        <div class="recommendation-icon">
+                            <i class="fas fa-volume-up"></i>
+                        </div>
+                        <div class="recommendation-title">Avoid Noise</div>
+                        <div class="recommendation-desc">Try to avoid prolonged exposure to high-decibel environments and take protective measures when necessary.</div>
+                    </div>
+
+                    <div class="recommendation-item">
+                        <div class="recommendation-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="recommendation-title">Regular Schedule</div>
+                        <div class="recommendation-desc">Maintain a regular sleep schedule and avoid over-fatigue that affects hearing health.</div>
+                    </div>
+
+                    <div class="recommendation-item">
+                        <div class="recommendation-icon">
+                            <i class="fas fa-hospital"></i>
+                        </div>
+                        <div class="recommendation-title">Seek Medical Attention</div>
+                        <div class="recommendation-desc">If you experience hearing discomfort, it is recommended to seek medical attention for examination and treatment.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 按顺序加载所需文件 -->
+    <script src="model.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Check if required components are loaded correctly
+        window.addEventListener('load', function() {
+            // Check if the model is loaded correctly
+            if (typeof window.predict !== 'function') {
+                console.error('Model not loaded properly');
+                alert('Model loading failed, please refresh the page and try again.');
+                return;
+            }
+
+            console.log('All components loaded successfully.');
+        });
+    </script>
+</body>
+</html>
