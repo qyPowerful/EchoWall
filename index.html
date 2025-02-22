@@ -638,13 +638,25 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="hbp">Systolic Blood Pressure</label>
+                    <label for="hbp">Blood Pressure Classification</label>
                     <select id="hbp" class="form-control" required>
                         <option value="">Select Systolic Blood Pressure</option>
-                        <option value="0">&lt; 140mmHg</option>
-                        <option value="1">140-159mmHg</option>
-                        <option value="2">160-179mmHg</option>
-                        <option value="3">≥180mmHg</option>
+                        <option value="0"
+                            Systolic＜130 mmHg
+                            Diastolic＜80mmHg
+                        </option>
+                        <option value="1"
+                            Systolic: 130-139 mmHg
+                            Diastolic: 80-89 mmHg
+                        </option>
+                        <option value="2"
+                            Systolic: 140-159 mmHg
+                            Diastolic: 90-99 mmHg
+                        </option>
+                        <option value="3">
+                            Systolic: ≥160 mmHg
+                            Diastolic: ≥100 mmHg
+                        </option>
                     </select>
                 </div>
 
