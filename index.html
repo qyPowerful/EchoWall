@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>High-Frequency Hearing Loss Prediction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4A90E2;
+            --primary-light: #6BA4E9;
+            --primary-dark: #357ABD;
+            --secondary-color: #F7B733;
+            --success-color: #2ECC71;
+            --warning-color: #E67E22;
+            --danger-color: #E74C3C;
+            --text-primary: #2C3E50;
+            --text-secondary: #7F8C8D;
+            --background-primary: #F5F7FA;
+            --background-secondary: #FFFFFF;
+            --border-radius: 16px;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Poppins', 'Noto Sans SC', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background: var(--background-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 创建科技风格背景 */
+        body::before {
+            content: '';
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(74, 144, 226, 0.03) 0%, transparent 20%),
+                radial-gradient(circle at 90% 30%, rgba(247, 183, 51, 0.03) 0%, transparent 20%),
+                radial-gradient(circle at 30% 70%, rgba(74, 144, 226, 0.03) 0%, transparent 20%),
+                radial-gradient(circle at 70% 80%, rgba(247, 183, 51, 0.03) 0%, transparent 20%);
+            z-index: -1;
+        }
+
+        /* 添加听力图标的网格背景 */
+        body::after {
+            content: '';
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 24 24' stroke-width='0.3' stroke='%234A90E2' fill='none'%3E%3Cpath d='M19 14c1.49-2.4 3-5.4 3-9a7 7 0 0 0-14 0c0 3.5 1.51 6.6 3 9'/%3E%3Cpath d='M5 21l2-2'/%3E%3Cpath d='M8 21l2-2'/%3E%3Cpath d='M11 16c-.66 0-1.34-.37-2-1.08-.66.73-1.34 1.08-2 1.08'/%3E%3C/svg%3E");
+            background-size: 120px;
+            background-repeat: space;
+            opacity: 0.03;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            background: var(--background-secondary);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 听力图标装饰 */
+        .ear-icon-decoration {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            bottom: -100px;
+            right: -100px;
+            opacity: 0.03;
+            z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9s-2 3 2 9c0 0 2 2 6 2s5.5-3 5.5-3c.5-1.5 2.5-5.5-1-9-.5-1-1.5-2-3-2s-4 1-6 5c-.5.5-2 1.5-2 3 0 1.5 2 3 2 3'/%3E%3Cpath d='M16 9c.5 0 1 .5 1 1.5 0 .5 0 1-.5 1.5'/%3E%3Cpath d='M12 6c1.5 0 3 1 3 3 0 .5 0 1-.5 1.5'/%3E%3Cpath d='M20 14c1.49-2.4 3-5.4 3-9a7 7 0 0 0-14 0c0 3.5 1.51 6.6 3 9'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            transform: rotate(-15deg);
+        }
+
+        /* 大脑图标装饰 */
+        .brain-icon-decoration {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            top: -120px;
+            left: -120px;
+            opacity: 0.03;
+            z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F7B733' stroke-width='1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15.5 13a5 5 0 1 0-5.5 5'/%3E%3Cpath d='M22 9l-4 1'/%3E%3Cpath d='M13 3l1 4'/%3E%3Cpath d='M10 3l-1 4'/%3E%3Cpath d='M2 9l4 1'/%3E%3Cpath d='M13.5 13a5 5 0 0 1-.5-1'/%3E%3Cpath d='M17 17l-2.5-1.5'/%3E%3Cpath d='M3 15l3-2'/%3E%3Cpath d='M20 21l-3-3'/%3E%3Cpath d='M7 21l3-3'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            transform: rotate(15deg);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 60px 40px 40px;
+            background: linear-gradient(135deg, #EBF4FF 0%, #FFFFFF 100%);
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 添加听力波形装饰 */
+        .header::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320' fill='%23ffffff'%3E%3Cpath d='M0,256L48,229.3C96,203,192,149,288,149.3C384,149,480,203,576,213.3C672,224,768,192,864,165.3C960,139,1056,117,1152,122.7C1248,128,1344,160,1392,176L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: cover;
+            opacity: 1;
+            z-index: 1;
+        }
+
+        /* 听力波形动画 */
+        .sound-wave {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 60px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .sound-wave span {
+            display: inline-block;
+            width: 3px;
+            margin: 0 2px;
+            background: rgba(74, 144, 226, 0.2);
+            border-radius: 50px;
+            animation: sound-wave-anim 1.2s infinite ease-in-out;
+        }
+
+        .sound-wave span:nth-child(1) { height: 10px; animation-delay: 0.1s; }
+        .sound-wave span:nth-child(2) { height: 15px; animation-delay: 0.2s; }
+        .sound-wave span:nth-child(3) { height: 25px; animation-delay: 0.3s; }
+        .sound-wave span:nth-child(4) { height: 35px; animation-delay: 0.4s; }
+        .sound-wave span:nth-child(5) { height: 40px; animation-delay: 0.5s; }
+        .sound-wave span:nth-child(6) { height: 30px; animation-delay: 0.6s; }
+        .sound-wave span:nth-child(7) { height: 20px; animation-delay: 0.7s; }
+        .sound-wave span:nth-child(8) { height: 15px; animation-delay: 0.8s; }
+        .sound-wave span:nth-child(9) { height: 10px; animation-delay: 0.9s; }
+
+        @keyframes sound-wave-anim {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(1.5); background: rgba(74, 144, 226, 0.5); }
+        }
+
+        /* 耳朵听力动画 */
+        .header-icon-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+        }
+
+        .header-icon {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 56px;
+            color: var(--primary-dark);
+            z-index: 2;
+        }
+
+        /* 听力波纹动画 */
+        .pulse-rings {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+        }
+
+        .pulse-ring {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            border-radius: 50%;
+            border: 2px solid var(--primary-color);
+            animation: pulse-ring 3s linear infinite;
+            opacity: 0;
+        }
+
+        .pulse-ring:nth-child(1) {
+            width: 40px;
+            height: 40px;
+            animation-delay: 0s;
+        }
+
+        .pulse-ring:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            animation-delay: 0.6s;
+        }
+
+        .pulse-ring:nth-child(3) {
+            width: 80px;
+            height: 80px;
+            animation-delay: 1.2s;
+        }
+
+        .pulse-ring:nth-child(4) {
+            width: 100px;
+            height: 100px;
+            animation-delay: 1.8s;
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                transform: translate(-50%, -50%) scale(0.3);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* 频率仪表盘装饰 */
+        .frequency-meter {
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .frequency-dial {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: conic-gradient(
+                var(--success-color) 0%, 
+                var(--primary-color) 50%, 
+                var(--danger-color) 100%
+            );
+            position: relative;
+        }
+
+        .frequency-dial::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: white;
+        }
+
+        .frequency-needle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 30px;
+            height: 2px;
+            background: var(--text-primary);
+            transform-origin: left center;
+            transform: rotate(30deg);
+            z-index: 2;
+            animation: frequency-needle 5s ease-in-out infinite alternate;
+        }
+
+        @keyframes frequency-needle {
+            0% { transform: rotate(-120deg); }
+            50% { transform: rotate(0deg); }
+            100% { transform: rotate(120deg); }
+        }
+
+        /* 听力损失图表装饰 */
+        .hearing-chart {
+            position: absolute;
+            bottom: 40px;
+            left: 40px;
+            width: 100px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            padding: 5px;
+        }
+
+        .chart-bar {
+            flex: 1;
+            margin: 0 1px;
+            background: var(--primary-light);
+            animation: chart-bar-anim 4s ease-in-out infinite alternate;
+        }
+
+        .chart-bar:nth-child(1) { height: 30%; animation-delay: 0.0s; }
+        .chart-bar:nth-child(2) { height: 60%; animation-delay: 0.2s; }
+        .chart-bar:nth-child(3) { height: 40%; animation-delay: 0.4s; }
+        .chart-bar:nth-child(4) { height: 70%; animation-delay: 0.6s; }
+        .chart-bar:nth-child(5) { height: 30%; animation-delay: 0.8s; }
+        .chart-bar:nth-child(6) { height: 20%; animation-delay: 1.0s; background: var(--danger-color); }
+        .chart-bar:nth-child(7) { height: 10%; animation-delay: 1.2s; background: var(--danger-color); }
+
+        @keyframes chart-bar-anim {
+            0% { height: var(--height); }
+            50% { height: calc(var(--height) + 20%); }
+            100% { height: var(--height); }
+        }
+
+        .header h1 {
+            color: var(--primary-color);
+            font-size: 36px;
+            margin: 0 0 25px;
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+        }
+
+        .header h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 3px;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            margin: 40px 0 0;
+            padding: 20px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+            position: relative;
+            z-index: 5;
+        }
+
+        /* 进度连接线改为声波样式 */
+        .progress-indicator::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 70px;
+            right: 70px;
+            height: 2px;
+            background: repeating-linear-gradient(
+                90deg,
+                var(--primary-light),
+                var(--primary-light) 5px,
+                transparent 5px,
+                transparent 10px
+            );
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .progress-step {
+            display: flex;
+            align-items: center;
+            position: relative;
+            margin: 0 30px;
+            z-index: 2;
+        }
+
+        .step-number {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-right: 12px;
+            transition: var(--transition);
+            position: relative;
+            box-shadow: 0 2px 10px rgba(74, 144, 226, 0.1);
+        }
+
+        .step-number.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(74, 144, 226, 0.2);
+        }
+
+        /* 步骤图标动画 */
+        .step-number::before {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.2;
+            transition: var(--transition);
+            animation: step-icon-pulse 2s infinite ease-in-out;
+        }
+
+        .progress-step:nth-child(1) .step-number::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E");
+        }
+
+        .progress-step:nth-child(2) .step-number::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 20V10'/%3E%3Cpath d='M12 20V4'/%3E%3Cpath d='M6 20v-6'/%3E%3C/svg%3E");
+        }
+
+        .progress-step:nth-child(3) .step-number::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 12h-4l-3 9L9 3l-3 9H2'/%3E%3C/svg%3E");
+        }
+
+        .progress-step:nth-child(4) .step-number::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z'/%3E%3Cpath d='M16.5 9.5L12 14 8.5 9.5h-3v9h14v-9h-3z'/%3E%3C/svg%3E");
+        }
+
+        @keyframes step-icon-pulse {
+            0%, 100% { transform: scale(1); opacity: 0.2; }
+            50% { transform: scale(1.2); opacity: 0.4; }
+        }
+
+        .step-number.active::before {
+            opacity: 0.7;
+            animation: step-icon-pulse 1.5s infinite ease-in-out;
+        }
+
+        .step-label {
+            font-size: 15px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .active + .step-label {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .form-section {
+            background: white;
+            padding: 40px;
+            border-radius: var(--border-radius);
+            margin: 0 40px 30px;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.03);
+            transition: var(--transition);
+            border: 1px solid rgba(74, 144, 226, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 科技感装饰线条 */
+        .form-section::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+            border-radius: 4px;
+        }
+
+        /* 添加电路板背景元素 */
+        .form-section::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 120px;
+            height: 120px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 24 24' stroke-width='0.3' stroke='%234A90E2' fill='none'%3E%3Cpath d='M15 5v14'/%3E%3Cpath d='M9 9a6 6 0 0 0 0 6'/%3E%3Cpath d='M9 9h6'/%3E%3Cpath d='M9 15h6'/%3E%3Ccircle cx='9' cy='9' r='1'/%3E%3Ccircle cx='9' cy='15' r='1'/%3E%3Ccircle cx='15' cy='9' r='1'/%3E%3Ccircle cx='15' cy='15' r='1'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            opacity: 0.05;
+            z-index: 0;
+        }
+
+        .form-section:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
+        }
+
+        .form-section h2 {
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(74, 144, 226, 0.1);
+            font-weight: 600;
+        }
+
+        .section-icon {
+            margin-right: 15px;
+            font-size: 24px;
+            color: var(--primary-color);
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(74, 144, 226, 0.08);
+            border-radius: 10px;
+            transition: var(--transition);
+        }
+
+        .form-section:hover .section-icon {
+            transform: scale(1.1) rotate(-5deg);
+            background: rgba(74, 144, 226, 0.1);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 15px;
+            margin-bottom: 10px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+        }
+
+        /* 标签小图标替换为听力相关图标 */
+        .form-group label::before {
+            content: '';
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin-right: 8px;
+            opacity: 0.7;
+            transition: var(--transition);
+        }
+
+        /* 根据表单类型使用不同图标 */
+        .form-group:nth-child(4n+1) label::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 9l10-7 10 7v11a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2z'/%3E%3C/svg%3E");
+        }
+
+        .form-group:nth-child(4n+2) label::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpolyline points='12 6 12 12 15 15'/%3E%3C/svg%3E");
+        }
+
+        .form-group:nth-child(4n+3) label::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 14c1.49-2.4 3-5.4 3-9a7 7 0 0 0-14 0c0 3.5 1.51 6.6 3 9'/%3E%3Cpath d='M11 14v4'/%3E%3Cpath d='M14 14l2 4'/%3E%3Cpath d='M8 14l-2 4'/%3E%3C/svg%3E");
+        }
+
+        .form-group:nth-child(4n+4) label::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z'/%3E%3C/svg%3E");
+        }
+
+        .form-group:hover label::before {
+            transform: scale(1.2);
+            opacity: 1;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #E2E8F0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: var(--transition);
+            background: white;
+            color: var(--text-primary);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.01);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
+            outline: none;
+        }
+
+        .form-control:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        /* 科技感选择框动画 */
+        .form-control::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-color), transparent);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .form-control:focus::after {
+            transform: scaleX(1);
+        }
+
+        .hint {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            background: rgba(74, 144, 226, 0.05);
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .form-group:hover .hint {
+            background: rgba(74, 144, 226, 0.08);
+        }
+
+        .hint i {
+            margin-right: 8px;
+            color: var(--primary-color);
+        }
+
+        /* 改进的提交按钮 */
+        .submit-btn-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            margin: 60px auto 70px;
+            z-index: 5;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 18px 48px;
+            border-radius: 14px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 280px;
+            box-shadow: 0 10px 25px rgba(74, 144, 226, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 声波按钮效果 */
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%' height='100%' viewBox='0 0 800 800'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.2)' stroke-width='1'%3E%3Cpath d='M769,229L1037,260.9M927,880L731,737.6M769,229L683,310.5M683,310.5L927,880M731,737.6L427,493.8M427,493.8L185,422.3M185,422.3L351,346.3M351,346.3L493.5,764.4M317.2,517.2L656.2,578.2M656.2,578.2L488.9,360.4M488.9,360.4L351,346.3M351,346.3L427,493.8M317.2,517.2L185,422.3'/%3E%3C/g%3E%3C/svg%3E");
+            background-size: cover;
+            opacity: 0.1;
+            transition: opacity 0.5s ease;
+        }
+
+        .submit-btn:hover::before {
+            opacity: 0.2;
+        }
+
+        .submit-btn::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            top: 0;
+            left: -100%;
+            transition: 0.5s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(74, 144, 226, 0.3);
+        }
+
+        .submit-btn:hover::after {
+            left: 100%;
+        }
+
+        .submit-btn i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        /* 添加按钮波纹 */
+        .submit-btn-rings {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .submit-btn-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 14px;
+            border: 2px solid rgba(74, 144, 226, 0.3);
+            animation: btn-pulse 2s infinite;
+            opacity: 0;
+        }
+
+        .submit-btn-ring:nth-child(1) {
+            width: calc(100% + 20px);
+            height: calc(100% + 20px);
+            animation-delay: 0s;
+        }
+
+        .submit-btn-ring:nth-child(2) {
+            width: calc(100% + 40px);
+            height: calc(100% + 40px);
+            animation-delay: 0.5s;
+        }
+
+        @keyframes btn-pulse {
+            0% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.1);
+                opacity: 0;
+            }
+        }
+
+        .result-container {
+            display: none;
+            margin: 0 40px 40px;
+            padding: 50px 40px;
+            border-radius: var(--border-radius);
+            background: white;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 结果框装饰 */
+        .result-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+        }
+
+        /* 添加科技背景图案 */
+        .result-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%234A90E2' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+            z-index: 0;
+        }
+
+        .result-container.show {
+            display: block;
+            animation: slideUp 0.8s ease;
+        }
+
+        /* 改进的风险仪表盘 */
+        .risk-meter-container {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            margin: 40px auto;
+        }
+
+        .risk-meter {
+            width: 250px;
+            height: 250px;
+            margin: 30px auto;
+            position: relative;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            transition: var(--transition);
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            z-index: 2;
+        }
+
+        .risk-meter::before {
+            content: '';
+            position: absolute;
+            width: 90%;
+            height: 90%;
+            border-radius: 50%;
+            border: 10px solid #F5F7FA;
+            box-shadow: inset 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 动态风险仪表盘 */
+        .risk-gauge {
+            position: absolute;
+            width: 320px;
+            height: 320px;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .gauge-ring {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(
+                var(--success-color) 0%, 
+                var(--secondary-color) 50%, 
+                var(--danger-color) 100%
+            );
+            clip-path: polygon(50% 50%, 50% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%, 50% 0%);
+            opacity: 0.15;
+            transform: rotate(-90deg);
+            animation: gauge-fill 2s ease-out forwards;
+        }
+
+        @keyframes gauge-fill {
+            0% { clip-path: polygon(50% 50%, 50% 0%, 50% 0%, 50% 0%, 50% 0%, 50% 0%, 50% 0%); }
+            100% { clip-path: polygon(50% 50%, 50% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%, 50% 0%); }
+        }
+
+        /* 仪表盘刻度 */
+        .gauge-marks {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+
+        .gauge-mark {
+            position: absolute;
+            width: 2px;
+            height: 10px;
+            background: rgba(127, 140, 141, 0.2);
+            transform-origin: center 160px;
+            left: 159px;
+            top: 0;
+        }
+
+        .gauge-mark:nth-child(1) { transform: rotate(0deg); }
+        .gauge-mark:nth-child(2) { transform: rotate(30deg); }
+        .gauge-mark:nth-child(3) { transform: rotate(60deg); }
+        .gauge-mark:nth-child(4) { transform: rotate(90deg); }
+        .gauge-mark:nth-child(5) { transform: rotate(120deg); }
+		.gauge-mark:nth-child(6) { transform: rotate(150deg); }
+        .gauge-mark:nth-child(7) { transform: rotate(180deg); }
+
+        /* 仪表盘指针 */
+        .gauge-needle {
+            position: absolute;
+            width: 120px;
+            height: 4px;
+            background: linear-gradient(90deg, rgba(127, 140, 141, 0.5), var(--primary-color));
+            top: 50%;
+            left: 50%;
+            transform: translate(0%, -50%) rotate(-90deg);
+            transform-origin: left center;
+            border-radius: 4px;
+            transition: transform 2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+            z-index: 3;
+        }
+
+        .gauge-needle::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+            border: 4px solid var(--primary-color);
+            left: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .risk-percentage {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 10px 0 0;
+            text-shadow: 0 2px 10px rgba(74, 144, 226, 0.15);
+            position: relative;
+            z-index: 2;
+            animation: countUp 1s ease-out;
+        }
+
+        .risk-label {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+            position: relative;
+            z-index: 2;
+        }
+
+        .risk-description {
+            color: var(--text-secondary);
+            margin: 30px auto;
+            max-width: 800px;
+            line-height: 1.8;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.05) 0%, rgba(247, 183, 51, 0.05) 100%);
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(74, 144, 226, 0.1);
+            position: relative;
+            z-index: 1;
+            transition: var(--transition);
+        }
+
+        .risk-description:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .recommendations {
+            margin-top: 50px;
+        }
+
+        .recommendations h3 {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .recommendations h3 i {
+            margin-right: 12px;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(74, 144, 226, 0.1);
+            border-radius: 12px;
+        }
+
+        .recommendations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .recommendation-item {
+            background: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            border: 1px solid rgba(74, 144, 226, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .recommendation-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+        }
+
+        .recommendation-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .recommendation-item:hover .recommendation-icon {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .recommendation-icon::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 15px;
+            z-index: -1;
+            opacity: 0.3;
+            filter: blur(3px);
+        }
+
+        .recommendation-icon i {
+            color: white;
+            font-size: 28px;
+        }
+
+        .recommendation-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+
+        .recommendation-desc {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes countUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 992px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .progress-indicator {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 20px 15px;
+            }
+            
+            .progress-indicator::before {
+                left: 25px;
+                right: auto;
+                top: 70px;
+                bottom: 70px;
+                width: 2px;
+                height: auto;
+                background: repeating-linear-gradient(
+                    to bottom,
+                    var(--primary-light),
+                    var(--primary-light) 5px,
+                    transparent 5px,
+                    transparent 10px
+                );
+            }
+            
+            .progress-step {
+                margin: 15px 0;
+            }
+            
+            .form-section {
+                margin: 0 20px 30px;
+                padding: 30px 20px;
+            }
+            
+            .header {
+                padding: 40px 20px 30px;
+            }
+            
+            .header h1 {
+                font-size: 28px;
+            }
+            
+            .result-container {
+                margin: 0 20px 30px;
+                padding: 30px 20px;
+            }
+            
+            .risk-meter-container {
+                width: 280px;
+                height: 280px;
+            }
+            
+            .risk-meter {
+                width: 220px;
+                height: 220px;
+            }
+            
+            .risk-gauge {
+                width: 280px;
+                height: 280px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                margin: 20px auto;
+            }
+            
+            .header-icon-container {
+                width: 90px;
+                height: 90px;
+            }
+            
+            .header-icon {
+                font-size: 40px;
+            }
+            
+            .submit-btn {
+                min-width: auto;
+                width: 100%;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+            
+            .action-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 装饰元素 -->
+        <div class="ear-icon-decoration"></div>
+        <div class="brain-icon-decoration"></div>
+        
+        <header class="header">
+            <!-- 头部图标 -->
+            <div class="header-icon-container">
+                <div class="pulse-rings">
+                    <div class="pulse-ring"></div>
+                    <div class="pulse-ring"></div>
+                    <div class="pulse-ring"></div>
+                    <div class="pulse-ring"></div>
+                </div>
+                <i class="fas fa-stethoscope header-icon"></i>
+            </div>
+            
+            <h1>High-Frequency Hearing Loss Prediction</h1>
+            <p>Personalized high-frequency hearing loss risk prediction system based on machine learning model. This prediction is for reference only. If you have any concerns, please seek medical attention in time.</p>
+            
+            <!-- 频率仪表盘装饰 -->
+            <div class="frequency-meter">
+                <div class="frequency-dial"></div>
+                <div class="frequency-needle"></div>
+            </div>
+            
+            <!-- 听力损失图表装饰 -->
+            <div class="hearing-chart">
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+            </div>
+            
+            <!-- 听力波形动画 -->
+            <div class="sound-wave">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            
+            <div class="progress-indicator">
+                <div class="progress-step">
+                    <div class="step-number active">1</div>
+                    <span class="step-label">Basic Information</span>
+                </div>
+                <div class="progress-step">
+                    <div class="step-number">2</div>
+                    <span class="step-label">Lifestyle Habits</span>
+                </div>
+                <div class="progress-step">
+                    <div class="step-number">3</div>
+                    <span class="step-label">Medical History</span>
+                </div>
+                <div class="progress-step">
+                    <div class="step-number">4</div>
+                    <span class="step-label">Clinical Test Results</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- 第一部分：基本信息 -->
+        <div class="form-section">
+            <h2>
+                <div class="section-icon"><i class="fas fa-user-md"></i></div>
+                Basic Information
+            </h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="age_rank">Age Rank</label>
+                    <select id="age_rank" class="form-control" required>
+                        <option value="">Select Age Rank</option>
+                        <option value="0">20-24 years old</option>
+                        <option value="1">25-29 years old</option>
+                        <option value="2">30-34 years old</option>
+                        <option value="3">35-39 years old</option>
+                        <option value="4">40-44 years old</option>
+                        <option value="5">45-49 years old</option>
+                        <option value="6">50-54 years old</option>
+                        <option value="7">55-59 years old</option>
+                        <option value="8">60-64 years old</option>
+                        <option value="9">65-69 years old</option>
+                        <option value="10">70-74 years old</option>
+                        <option value="11">75-80 years old</option>
+                        <option value="12">80+ years old</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="sex">Gender</label>
+                    <select id="sex" class="form-control" required>
+                        <option value="">Select Gender</option>
+                        <option value="1">Male</option>
+                        <option value="2">Female</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="Education">Education Level</label>
+                    <select id="Education" class="form-control" required>
+                        <option value="">Select Education Level</option>
+                        <option value="1">Elementary school or lower</option>
+                        <option value="2">Primary</option>
+                        <option value="3">Secondary</option>
+                        <option value="4">College</option>
+                        <option value="5">Higher</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="race">Race</label>
+                    <select id="race" class="form-control" required>
+                        <option value="">Select Race</option>
+                        <option value="1">Han Chinese</option>
+                        <option value="2">Korean ethnic group</option>
+                        <option value="3">Yao ethnic group</option>
+                        <option value="4">Other ethnic group</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第二部分：生活习惯 -->
+        <div class="form-section">
+            <h2>
+                <div class="section-icon"><i class="fas fa-walking"></i></div>
+                Lifestyle Habits
+            </h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="activities">Physical Labor</label>
+                    <select id="activities" class="form-control" required>
+                        <option value="">Select Activity Level</option>
+                        <option value="3">High</option>
+                        <option value="2">Moderate</option>
+                        <option value="1">Low</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="dairy">Frequency of Dairy Products Consumption</label>
+                    <select id="dairy" class="form-control" required>
+                        <option value="">Select Intake Frequency</option>
+                        <option value="1">5-7 days per week</option>
+                        <option value="2">3-4 days per week</option>
+                        <option value="3">1-2 days per week</option>
+                        <option value="4">≤3 days per month</option>
+                        <option value="5">Never eat</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="drink">Alcohol Consumption Status</label>
+                    <select id="drink" class="form-control" required>
+                        <option value="">Select Alcohol Consumption Status</option>
+                        <option value="2">Current</option>
+                        <option value="1">Former</option>
+                        <option value="0">Never</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="smoke">Smoking Status</label>
+                    <select id="smoke" class="form-control" required>
+                        <option value="">Select Smoking Status</option>
+                        <option value="2">Current</option>
+                        <option value="1">Former</option>
+                        <option value="0">Never</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第三部分：健康状况 -->
+        <div class="form-section">
+            <h2>
+                <div class="section-icon"><i class="fas fa-notes-medical"></i></div>
+                Medical History
+            </h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="hearing">Self-reported Hearing Status</label>
+                    <select id="hearing" class="form-control" required>
+                        <option value="">Select Hearing Condition</option>
+                        <option value="0">Good</option>
+                        <option value="2">Fair</option>
+                        <option value="3">Poor</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="tinnitus">Tinnitus Duration (≥ 5 minutes/year)</label>
+                    <select id="tinnitus" class="form-control" required>
+                        <option value="">Select Tinnitus Status</option>
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="hbp">Blood Pressure Classification</label>
+                    <select id="hbp" class="form-control" required>
+                        <option value="">Select Systolic Blood Pressure</option>
+                        <option value="0">
+                            Systolic＜130 mmHg
+                            Diastolic＜80mmHg
+                        </option>
+                        <option value="1">
+                            Systolic: 130-139 mmHg
+                            Diastolic: 80-89 mmHg
+                        </option>
+                        <option value="2">
+                            Systolic: 140-159 mmHg
+                            Diastolic: 90-99 mmHg
+                        </option>
+                        <option value="3">
+                            Systolic: ≥160 mmHg
+                            Diastolic: ≥100 mmHg
+                        </option>
+                    </select>
+                </div>
+
+                <!-- 添加一个空的 div 元素，以填充 Medical History 标签页的空缺 -->
+                <div class="form-group"></div>
+            </div>
+        </div>
+
+        <!-- 第四部分： 临床测试结果 -->
+        <div class="form-section">
+            <h2>
+                <div class="section-icon"><i class="fas fa-vial"></i></div>
+                Clinical Test Results
+            </h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="tg">Triglycerides (mmol/L)</label>
+                    <select id="tg" class="form-control" required>
+                        <option value="">Select Triglyceride Level</option>
+                        <option value="0">&lt; 1.7</option>
+                        <option value="1">1.7 - 2.3</option>
+                        <option value="2">≥ 2.3</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="cho">Cholesterol (mmol/L)</label>
+                    <select id="cho" class="form-control" required>
+                        <option value="">Select Cholesterol Level</option>
+                        <option value="0">&lt; 5.2</option>
+                        <option value="1">5.2 - 6.2</option>
+                        <option value="2">≥ 6.2</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="glu">Fasting Blood Glucose (mmol/L)</label>
+                    <select id="glu" class="form-control" required>
+                        <option value="">Select Fasting Blood Glucose Level</option>
+                        <option value="0">&lt; 5.6</option>
+                        <option value="1">5.6 - 6.9</option>
+                        <option value="2">≥ 7.0</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="bmi">Body Mass Index (BMI)</label>
+                    <select id="bmi" class="form-control" required>
+                        <option value="">Select Body Mass Index Level</option>
+                        <option value="0">&lt; 18.5</option>
+                        <option value="1">18.5 - 24.9</option>
+                        <option value="2">≥25</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- 提交按钮 -->
+        <div class="submit-btn-container">
+            <button class="submit-btn" onclick="predict()">
+                <i class="fas fa-stethoscope"></i>
+                Start Prediction
+            </button>
+            <!-- 按钮波纹效果 -->
+            <div class="submit-btn-rings">
+                <div class="submit-btn-ring"></div>
+                <div class="submit-btn-ring"></div>
+            </div>
+        </div>
+
+        <!-- 结果显示区域 -->
+        <div class="result-container" id="result">
+            <!-- 风险仪表盘 -->
+            <div class="risk-meter-container">
+                <div class="risk-meter">
+                    <div class="risk-percentage" id="risk-value">--</div>
+                    <div class="risk-label">Risk Level</div>
+                </div>
+                <div class="risk-gauge">
+                    <div class="gauge-ring"></div>
+                    <div class="gauge-marks">
+                        <div class="gauge-mark"></div>
+                        <div class="gauge-mark"></div>
+                        <div class="gauge-mark"></div>
+                        <div class="gauge-mark"></div>
+                        <div class="gauge-mark"></div>
+                        <div class="gauge-mark"></div>
+                        <div class="gauge-mark"></div>
+                    </div>
+                    <div class="gauge-needle"></div>
+                </div>
+            </div>
+
+            <div class="risk-description">
+                Based on the information you provided, our machine learning model analysis indicates that your risk of developing high-frequency hearing loss is
+                <strong id="risk-percentage">--</strong>.
+                <br><br>
+                <small>* This prediction is based on a statistical model and is for reference only. It should not be used as a medical diagnosis. If you have concerns about your hearing health, it is recommended to seek medical attention for examination.</small>
+            </div>
+
+            <div class="recommendations">
+                <h3>
+                    <i class="fas fa-clipboard-list"></i>
+                    Professional Recommendations
+                </h3>
+                <div class="recommendations-grid">
+                    <div class="recommendation-item">
+                        <div class="recommendation-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="recommendation-title">Regular Check-ups</div>
+                        <div class="recommendation-desc">It is recommended to have a professional hearing test once a year to understand your hearing health.</div>
+                    </div>
+
+                    <div class="recommendation-item">
+                        <div class="recommendation-icon">
+                            <i class="fas fa-volume-up"></i>
+                        </div>
+                        <div class="recommendation-title">Avoid Noise</div>
+                        <div class="recommendation-desc">Try to avoid prolonged exposure to high-decibel environments and take protective measures when necessary.</div>
+                    </div>
+
+                    <div class="recommendation-item">
+                        <div class="recommendation-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="recommendation-title">Regular Schedule</div>
+                        <div class="recommendation-desc">Maintain a regular sleep schedule and avoid over-fatigue that affects hearing health.</div>
+                    </div>
+
+                    <div class="recommendation-item">
+                        <div class="recommendation-icon">
+                            <i class="fas fa-hospital"></i>
+                        </div>
+                        <div class="recommendation-title">Seek Medical Attention</div>
+                        <div class="recommendation-desc">If you experience hearing discomfort, it is recommended to seek medical attention for examination and treatment.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 按顺序加载所需文件 -->
+    <script src="model.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Check if required components are loaded correctly
+        window.addEventListener('load', function() {
+            // Check if the model is loaded correctly
+            if (typeof window.predict !== 'function') {
+                console.error('Model not loaded properly');
+                alert('Model loading failed, please refresh the page and try again.');
+                return;
+            }
+
+            console.log('All components loaded successfully.');
+        });
+    </script>
+</body>
+</html>
