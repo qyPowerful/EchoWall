@@ -570,7 +570,7 @@
             font-size: 18px;
             font-weight: 600;
             cursor: pointer;
-            transition: var(--transition);
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -578,24 +578,13 @@
             box-shadow: 0 10px 25px rgba(74, 144, 226, 0.25);
             position: relative;
             overflow: hidden;
-            /* 添加霓虹效果 */
-            border: 2px solid transparent;
-            background-clip: padding-box;
-            animation: neon-pulse 2s infinite;
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
         }
 
-        @keyframes neon-pulse {
-            0%, 100% {
-                box-shadow: 0 0 15px 0 rgba(74, 144, 226, 0.5),
-                           0 0 30px 0 rgba(74, 144, 226, 0.3),
-                           0 0 45px 0 rgba(74, 144, 226, 0.1);
-            }
-            50% {
-                box-shadow: 0 0 25px 0 rgba(74, 144, 226, 0.8),
-                           0 0 40px 0 rgba(74, 144, 226, 0.5),
-                           0 0 60px 0 rgba(74, 144, 226, 0.3);
-            }
+        /* 添加预测按钮悬停效果 */
+        .submit-btn:hover {
+            transform: scale(1.05); /* 放大效果 */
+            box-shadow: 0 15px 30px rgba(74, 144, 226, 0.4); /* 加强阴影 */
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); /* 渐变变化 */
         }
 
         /* 点击波纹效果 */
@@ -1023,9 +1012,8 @@
 
         .recommendations-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(2, 1fr); /* 固定两列 */
             gap: 30px;
-            margin-top: 20px;
         }
 
         .recommendation-item {
@@ -1065,32 +1053,25 @@
         }
 
         .recommendation-icon {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light)); /* 更深的蓝色背景 */
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 20px;
             position: relative;
             transition: var(--transition);
-            background: linear-gradient(135deg, #f6f9fe, #ffffff);
-            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.15),
-                        inset 0 -2px 5px rgba(0, 0, 0, 0.05);
-        }
-
-        .recommendation-item:hover .recommendation-icon {
-            transform: scale(1.1);
         }
 
         .recommendation-icon i {
-            font-size: 30px;
-            color: var(--primary-color);
-            transition: var(--transition);
+            color: white;
+            font-size: 28px;
+            filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2)); /* 添加阴影增加可见度 */
         }
 
-        .recommendation-item:hover .recommendation-icon i {
-            color: var(--primary-dark);
+        .recommendation-item:hover .recommendation-icon {
             transform: scale(1.1);
         }
 
@@ -1124,6 +1105,37 @@
             color: var(--text-secondary);
             line-height: 1.7;
             font-size: 15px;
+        }
+
+        /* 修改响应式布局，确保在小屏幕上也是2*2布局 */
+        @media (max-width: 768px) {
+            .recommendations-grid {
+                grid-template-columns: repeat(2, 1fr); /* 保持两列 */
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .recommendations-grid {
+                grid-template-columns: 1fr; /* 在非常小的屏幕上改为单列 */
+            }
+        }
+
+        /* 找到并删除 data source 的元素和样式 */
+        .risk-meter-container .data-source {
+            /* 移除此元素的样式，或者保留样式但是将元素设为不可见 */
+            display: none;
+        }
+
+        .submit-btn-container {
+            position: relative;
+            display: flex;
+            justify-content: center; /* 确保按钮居中 */
+            margin: 60px auto 70px;
+            z-index: 5;
+            width: 100%; /* 确保容器占据整行宽度 */
+            text-align: center; /* 额外保证居中 */
+            align-items: center; /* 垂直居中 */
         }
     </style>
 </head>
@@ -1505,7 +1517,6 @@
                     </div>
                     <div class="gauge-needle"></div>
                 </div>
-                <div class="data-source">Source: Machine Learning Prediction Model</div>
             </div>
 
             <div class="risk-description">
