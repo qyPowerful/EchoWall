@@ -6,1345 +6,1591 @@
     <title>High-Frequency Hearing Loss Prediction</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- 添加Iconify库 -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <style>
         :root {
-            --primary-color: #3498db;
-            --primary-light: #5dade2;
-            --primary-dark: #2874a6;
-            --secondary-color: #2ecc71;
-            --accent-color: #f39c12;
-            --danger-color: #e74c3c;
-            --success-color: #27ae60;
+            --primary-color: #4A90E2;
+            --primary-light: #6BA4E9;
+            --primary-dark: #357ABD;
+            --secondary-color: #F7B733;
+            --success-color: #2ECC71;
+            --warning-color: #E67E22;
+            --danger-color: #E74C3C;
             --text-primary: #2C3E50;
             --text-secondary: #7F8C8D;
-            --background-primary: #f8fafc;
+            --background-primary: #F5F7FA;
+            --background-secondary: #FFFFFF;
             --border-radius: 16px;
-            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             --transition: all 0.3s ease;
         }
 
-        * {
+        body {
+            font-family: 'Poppins', 'Noto Sans SC', sans-serif;
+            line-height: 1.6;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Noto Sans SC', 'Poppins', sans-serif;
-            background-color: var(--background-primary);
+            background: var(--background-primary);
             color: var(--text-primary);
-            line-height: 1.6;
-            position: relative;
             min-height: 100vh;
+            position: relative;
             overflow-x: hidden;
         }
-
-        /* 医疗科技主题背景 */
+        
+        /* 添加粒子背景画布 */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -3;
+            opacity: 0.8;
+        }
+        
+        /* 创建科技风格背景 */
         body::before {
             content: '';
             position: fixed;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
             background: 
-                radial-gradient(circle at 10% 20%, rgba(74, 144, 226, 0.05) 0%, rgba(148, 202, 250, 0.05) 100%),
-                radial-gradient(circle at 90% 80%, rgba(74, 144, 226, 0.08) 0%, rgba(148, 202, 250, 0) 100%);
-            z-index: -2;
+                radial-gradient(circle at 10% 20%, rgba(74, 144, 226, 0.03) 0%, transparent 20%),
+                radial-gradient(circle at 90% 30%, rgba(247, 183, 51, 0.03) 0%, transparent 20%),
+                radial-gradient(circle at 30% 70%, rgba(74, 144, 226, 0.03) 0%, transparent 20%),
+                radial-gradient(circle at 70% 80%, rgba(247, 183, 51, 0.03) 0%, transparent 20%);
+            z-index: -1;
         }
 
-        /* 科技感网格背景 */
+        /* 添加听力图标的网格背景 */
         body::after {
             content: '';
             position: fixed;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath fill='%234a90e2' fill-opacity='0.05' d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5z'%3E%3C/path%3E%3C/svg%3E");
-            opacity: 0.5;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 24 24' stroke-width='0.3' stroke='%234A90E2' fill='none'%3E%3Cpath d='M19 14c1.49-2.4 3-5.4 3-9a7 7 0 0 0-14 0c0 3.5 1.51 6.6 3 9'/%3E%3Cpath d='M5 21l2-2'/%3E%3Cpath d='M8 21l2-2'/%3E%3Cpath d='M11 16c-.66 0-1.34-.37-2-1.08-.66.73-1.34 1.08-2 1.08'/%3E%3C/svg%3E");
+            background-size: 120px;
+            background-repeat: space;
+            opacity: 0.03;
             z-index: -1;
         }
 
         .container {
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 40px auto;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 24px;
+            background: var(--background-secondary);
+            border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
-            overflow: hidden;
             position: relative;
+            overflow: hidden;
         }
 
-        /* 耳朵图标装饰 */
+        /* 听力图标装饰 */
         .ear-icon-decoration {
             position: absolute;
-            top: -80px;
-            left: -80px;
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(74, 144, 226, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
-            z-index: -1;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .ear-icon-decoration::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-30%, -30%);
-            width: 60px;
-            height: 60px;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9'/%3E%3Cpath d='M10.3 21a1.94 1.94 0 0 0 3.4 0'/%3E%3C/svg%3E");
+            width: 300px;
+            height: 300px;
+            bottom: -100px;
+            right: -100px;
+            opacity: 0.03;
+            z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9s-2 3 2 9c0 0 2 2 6 2s5.5-3 5.5-3c.5-1.5 2.5-5.5-1-9-.5-1-1.5-2-3-2s-4 1-6 5c-.5.5-2 1.5-2 3 0 1.5 2 3 2 3'/%3E%3Cpath d='M16 9c.5 0 1 .5 1 1.5 0 .5 0 1-.5 1.5'/%3E%3Cpath d='M12 6c1.5 0 3 1 3 3 0 .5 0 1-.5 1.5'/%3E%3Cpath d='M20 14c1.49-2.4 3-5.4 3-9a7 7 0 0 0-14 0c0 3.5 1.51 6.6 3 9'/%3E%3C/svg%3E");
             background-size: contain;
             background-repeat: no-repeat;
-            opacity: 0.4;
+            background-position: center;
+            transform: rotate(-15deg);
         }
 
         /* 大脑图标装饰 */
         .brain-icon-decoration {
             position: absolute;
-            top: 40px;
-            right: -80px;
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(74, 144, 226, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
-            z-index: -1;
-            animation: float 6s ease-in-out infinite reverse;
-        }
-
-        .brain-icon-decoration::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-70%, -50%);
-            width: 60px;
-            height: 60px;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44'/%3E%3Cpath d='M5.5 2A2.5 2.5 0 0 0 3 4.5v15a2.5 2.5 0 0 0 5 0'/%3E%3Cpath d='M14.5 4A2.5 2.5 0 0 0 12 6.5'/%3E%3Cpath d='M18.5 4A2.5 2.5 0 0 1 21 6.5v10a2.5 2.5 0 0 1-4.96.44'/%3E%3Cpath d='M14.5 22A2.5 2.5 0 0 0 17 19.5'/%3E%3C/svg%3E");
+            width: 300px;
+            height: 300px;
+            top: -120px;
+            left: -120px;
+            opacity: 0.03;
+            z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F7B733' stroke-width='1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15.5 13a5 5 0 1 0-5.5 5'/%3E%3Cpath d='M22 9l-4 1'/%3E%3Cpath d='M13 3l1 4'/%3E%3Cpath d='M10 3l-1 4'/%3E%3Cpath d='M2 9l4 1'/%3E%3Cpath d='M13.5 13a5 5 0 0 1-.5-1'/%3E%3Cpath d='M17 17l-2.5-1.5'/%3E%3Cpath d='M3 15l3-2'/%3E%3Cpath d='M20 21l-3-3'/%3E%3Cpath d='M7 21l3-3'/%3E%3C/svg%3E");
             background-size: contain;
             background-repeat: no-repeat;
-            opacity: 0.4;
+            background-position: center;
+            transform: rotate(15deg);
         }
-		/* 浮动动画 */
-@keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-    100% { transform: translateY(0px); }
-}
-
-/* 标题区域 */
-.header {
-    position: relative;
-    padding: 40px;
-    background: linear-gradient(135deg, #4a90e2, #2874a6);
-    color: white;
-    text-align: center;
-    overflow: hidden;
-}
-
-/* 声波动画 */
-.sound-wave {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 40px;
-    overflow: hidden;
-}
-
-.sound-wave::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.2' d='M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
-    background-size: 1440px 120px;
-    animation: wave 15s linear infinite;
-    opacity: 0.4;
-}
-
-.sound-wave::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.3' d='M0,64L48,80C96,96,192,128,288,149.3C384,171,480,181,576,176C672,171,768,149,864,128C960,107,1056,85,1152,96C1248,107,1344,149,1392,170.7L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
-    background-size: 1440px 120px;
-    animation: wave 12s linear infinite reverse;
-    opacity: 0.3;
-}
-
-@keyframes wave {
-    0% { background-position-x: 0; }
-    100% { background-position-x: 1440px; }
-}
-
-/* 脉冲环装饰 */
-.pulse-ring {
-    position: absolute;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.2);
-    transform: translate(-50%, -50%) scale(0);
-    animation: pulse 3s ease-out infinite;
-}
-
-.pulse-ring:nth-child(1) {
-    top: 30%;
-    left: 25%;
-    width: 150px;
-    height: 150px;
-    animation-delay: 0s;
-}
-
-.pulse-ring:nth-child(2) {
-    top: 70%;
-    left: 80%;
-    width: 120px;
-    height: 120px;
-    animation-delay: 1s;
-}
-
-.pulse-ring:nth-child(3) {
-    top: 40%;
-    left: 65%;
-    width: 180px;
-    height: 180px;
-    animation-delay: 2s;
-}
-
-@keyframes pulse {
-    0% { transform: translate(-50%, -50%) scale(0); opacity: 0.8; }
-    100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
-}
-
-/* 标题图标容器 */
-.header-icon-container {
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: center;
-}
-
-.header-icon {
-    width: 70px;
-    height: 70px;
-    margin: 0 15px;
-    position: relative;
-}
-
-.header-icon::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-.ear-icon::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9'/%3E%3Cpath d='M10.3 21a1.94 1.94 0 0 0 3.4 0'/%3E%3C/svg%3E");
-    animation: wiggle 3s ease-in-out infinite;
-}
-
-.brain-icon::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44'/%3E%3Cpath d='M5.5 2A2.5 2.5 0 0 0 3 4.5v15a2.5 2.5 0 0 0 5 0'/%3E%3Cpath d='M14.5 4A2.5 2.5 0 0 0 12 6.5'/%3E%3Cpath d='M18.5 4A2.5 2.5 0 0 1 21 6.5v10a2.5 2.5 0 0 1-4.96.44'/%3E%3Cpath d='M14.5 22A2.5 2.5 0 0 0 17 19.5'/%3E%3C/svg%3E");
-    animation: pulse-glow 3s ease-in-out infinite;
-}
-
-@keyframes wiggle {
-    0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(-5deg); }
-    75% { transform: rotate(5deg); }
-}
-
-@keyframes pulse-glow {
-    0%, 100% { filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7)); }
-    50% { filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.9)); }
-}
-
-/* 标题文字 */
-.header h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-    font-weight: 700;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.header p {
-    font-size: 1.1rem;
-    max-width: 700px;
-    margin: 0 auto 20px;
-    opacity: 0.9;
-}
-
-/* 进度指示器 */
-.progress-indicator {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 30px;
-    position: relative;
-    z-index: 1;
-}
-
-.step {
-    flex: 1;
-    text-align: center;
-    position: relative;
-}
-
-.step-number {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.2);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 10px;
-    font-weight: 700;
-    position: relative;
-    z-index: 2;
-    transition: var(--transition);
-}
-
-.step.active .step-number {
-    background-color: var(--accent-color);
-    box-shadow: 0 0 15px rgba(243, 156, 18, 0.5);
-}
-
-.step-title {
-    font-size: 0.9rem;
-    color: white;
-    opacity: 0.8;
-    transition: var(--transition);
-}
-
-.step.active .step-title {
-    opacity: 1;
-    font-weight: 600;
-}
-
-/* 步骤箭头连接，替换原来的虚线 */
-.step-connection {
-    position: absolute;
-    top: 20px;
-    right: 50%;
-    height: 3px;
-    width: 80%;
-    background: rgba(255, 255, 255, 0.2);
-    z-index: 1;
-}
-
-.step-connection::after {
-    content: '';
-    position: absolute;
-    top: -8px;
-    right: -2px;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 10px 0 10px 15px;
-    border-color: transparent transparent transparent rgba(255, 255, 255, 0.2);
-    animation: arrow-pulse 2s infinite;
-}
-
-.step:last-child .step-connection {
-    display: none;
-}
-
-@keyframes arrow-pulse {
-    0%, 100% { opacity: 0.5; }
-    50% { opacity: 1; }
-}
-/* 表单部分样式 */
-.form-section {
-    padding: 30px 40px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    transition: var(--transition);
-}
-
-.form-section:hover {
-    background-color: rgba(74, 144, 226, 0.03);
-    box-shadow: inset 0 0 20px rgba(74, 144, 226, 0.02);
-}
-
-.form-section h2 {
-    font-size: 1.5rem;
-    margin-bottom: 25px;
-    color: var(--primary-dark);
-    display: flex;
-    align-items: center;
-    position: relative;
-}
-
-.form-section h2::before {
-    content: '';
-    width: 30px;
-    height: 30px;
-    margin-right: 10px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    opacity: 0.7;
-}
-
-.form-section.basic h2::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E");
-}
-
-.form-section.lifestyle h2::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 8h1a4 4 0 0 1 0 8h-1'/%3E%3Cpath d='M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z'/%3E%3Cline x1='6' y1='1' x2='6' y2='4'/%3E%3Cline x1='10' y1='1' x2='10' y2='4'/%3E%3Cline x1='14' y1='1' x2='14' y2='4'/%3E%3C/svg%3E");
-}
-
-.form-section.medical h2::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 12h-4l-3 9L9 3l-3 9H2'/%3E%3C/svg%3E");
-}
-
-.form-section.clinical h2::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='4' y='4' width='16' height='16' rx='2' ry='2'/%3E%3Cline x1='12' y1='4' x2='12' y2='20'/%3E%3Cline x1='4' y1='12' x2='20' y2='12'/%3E%3C/svg%3E");
-}
-
-/* 表单组样式 */
-.form-group {
-    margin-bottom: 20px;
-    border-radius: 10px;
-    padding: 8px;
-    transition: var(--transition);
-}
-
-.form-group:hover {
-    background-color: rgba(74, 144, 226, 0.05);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
-    transform: translateY(-2px);
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: var(--text-primary);
-    padding-left: 30px;
-    position: relative;
-}
-
-/* 表单标签图标 */
-label[for]::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 22px;
-    height: 22px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    opacity: 0.7;
-}
-
-/* 为每个标签添加对应的图标 */
-label[for="age_rank"]::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z'/%3E%3C/svg%3E");
-}
-
-label[for="gender"]::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='5' r='3'/%3E%3Cline x1='12' y1='8' x2='12' y2='21'/%3E%3Cline x1='8' y1='16' x2='16' y2='16'/%3E%3C/svg%3E");
-}
-
-label[for="education_level"]::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z'/%3E%3Cpath d='M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z'/%3E%3C/svg%3E");
-}
-
-label[for="race"]::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='9' cy='7' r='4'/%3E%3Cpath d='M23 21v-2a4 4 0 0 0-3-3.87'/%3E%3Cpath d='M16 3.13a4 4 0 0 1 0 7.75'/%3E%3C/svg%3E");
-}
-
-label[for="physical_labor"]::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 18a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2'/%3E%3Crect x='3' y='4' width='18' height='18' rx='2'/%3E%3Ccircle cx='9' cy='10' r='2'/%3E%3Cpath d='M15 8h.01'/%3E%3Cpath d='M15 12h.01'/%3E%3C/svg%3E");
-}
-
-label[for="dairy_consumption"]::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z'/%3E%3Cline x1='3' y1='6' x2='21' y2='6'/%3E%3Cpath d='M16 10a4 4 0 0 1-8 0'/%3E%3C/svg%3E");
-}
-label[for="alcohol_consumption"]::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 21h8'/%3E%3Cpath d='M12 21v-4'/%3E%3Cpath d='M16 4l3 7H5l3-7'/%3E%3Cpath d='M17.5 11l.5 9'/%3E%3Cpath d='M6.5 11l-.5 9'/%3E%3Cpath d='M5 11h14'/%3E%3C/svg%3E");
-}
-
-label[for="smoking_status"]::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 12H2v4h16'/%3E%3Cpath d='M22 12v4'/%3E%3Cpath d='M7 12v4'/%3E%3Cpath d='M18 8c0-2.5-2-2.5-2-5'/%3E%3Cpath d='M22 8c0-2.5-2-2.5-2-5'/%3E%3C/svg%3E");
-}
-
-label[for="hearing_status"]::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9'/%3E%3Cpath d='M10.3 21a1.94 1.94 0 0 0 3.4 0'/%3E%3C/svg%3E");
-}
-
-label[for="tinnitus"]::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 2L2 22'/%3E%3Cpath d='M9.9 5.1C9 5.8 8.2 6.6 7.5 7.5'/%3E%3Cpath d='M14.5 17.5c-.9.8-1.9 1.5-3 2'/%3E%3Cpath d='M5.1 9.9c-1.2 2.2-1.4 4.8-.7 7.2'/%3E%3Cpath d='M16.5 14.5c1.2-2.3 1.4-5 .5-7.5'/%3E%3C/svg%3E");
-}
-
-label[for="blood_pressure"]::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 12h20'/%3E%3Cpath d='M2 12a10 10 0 0 1 20 0'/%3E%3Cpath d='M2 12a10 10 0 0 0 20 0'/%3E%3C/svg%3E");
-}
-
-label[for="triglycerides"]::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14.5 2v16.5c0 2.5-2 4.5-4.5 4.5s-4.5-2-4.5-4.5V10H3v8.5C3 21.5 7 23 12 23s9-1.5 9-4.5V2'/%3E%3C/svg%3E");
-}
-
-label[for="cholesterol"]::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8.56 2.9A7 7 0 0 0 19 9v4m-9.34 6.28A7 7 0 0 1 5 13V9a7 7 0 0 1 .28-2'/%3E%3Cpath d='M12 19v3'/%3E%3Cpath d='M12 13v-3'/%3E%3Cline x1='3' y1='15' x2='9' y2='15'/%3E%3Cline x1='15' y1='15' x2='21' y2='15'/%3E%3C/svg%3E");
-}
-
-label[for="fasting_blood_glucose"]::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2v6'/%3E%3Cpath d='M17.5 7.5l-1.5 1.5'/%3E%3Cpath d='M22 12h-6'/%3E%3Cpath d='M17.5 16.5l-1.5-1.5'/%3E%3Cpath d='M12 22v-6'/%3E%3Cpath d='M6.5 16.5l1.5-1.5'/%3E%3Cpath d='M2 12h6'/%3E%3Cpath d='M6.5 7.5l1.5 1.5'/%3E%3C/svg%3E");
-}
-
-label[for="bmi"]::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='3' width='20' height='18' rx='2'/%3E%3Cline x1='8' y1='7' x2='16' y2='7'/%3E%3Cline x1='8' y1='12' x2='16' y2='12'/%3E%3Cline x1='8' y1='17' x2='16' y2='17'/%3E%3C/svg%3E");
-}
-
-/* 表单控件样式 */
-.form-control {
-    width: 100%;
-    padding: 12px 15px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: var(--transition);
-    background-color: #fff;
-    color: var(--text-primary);
-}
-
-.form-control:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-}
-
-.form-control:hover {
-    border-color: var(--primary-light);
-}
-
-/* 表单提示 */
-.form-hint {
-    display: block;
-    margin-top: 5px;
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-}
-
-/* 提交按钮容器 */
-.submit-btn-container {
-    padding: 30px 40px;
-    text-align: center;
-}
-
-/* 提交按钮 */
-.submit-btn {
-    padding: 14px 40px;
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-    color: white;
-    border: none;
-    border-radius: 50px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition);
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 10px 20px rgba(52, 152, 219, 0.2);
-}
-
-.submit-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 25px rgba(52, 152, 219, 0.3);
-}
-
-.submit-btn:active {
-    transform: translateY(-1px);
-}
-
-/* 按钮内部闪光效果 */
-.submit-btn::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
-    transform: rotate(30deg);
-    transition: var(--transition);
-    opacity: 0;
-}
-
-.submit-btn:hover::after {
-    opacity: 1;
-    transform: rotate(30deg) translate(10%, -10%);
-}
-/* 结果容器 */
-.result-container {
-    padding: 40px;
-    display: none;
-    border-top: 5px solid var(--primary-color);
-    position: relative;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(240, 248, 255, 0.9));
-}
-
-/* 结果容器背景装饰 */
-.result-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5z' fill='%234a90e2' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
-    z-index: -1;
-}
-
-.result-title {
-    font-size: 1.8rem;
-    margin-bottom: 30px;
-    color: var(--primary-dark);
-    text-align: center;
-    font-weight: 700;
-}
-
-/* 风险仪表盘容器 */
-.risk-meter-container {
-    margin: 30px auto;
-    max-width: 300px;
-    position: relative;
-}
-
-/* 风险仪表盘 */
-.risk-meter {
-    width: 100%;
-    height: 150px;
-    background: #f8f9fa;
-    border-radius: 150px 150px 0 0;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-}
-
-/* 仪表刻度线 */
-.gauge-mark {
-    position: absolute;
-    bottom: 0;
-    width: 2px;
-    height: 10px;
-    background-color: rgba(0, 0, 0, 0.2);
-    transform-origin: center bottom;
-}
-
-/* 生成10个均匀分布的刻度线 */
-.gauge-mark:nth-child(1) { left: 10%; transform: rotate(-72deg); }
-.gauge-mark:nth-child(2) { left: 20%; transform: rotate(-54deg); }
-.gauge-mark:nth-child(3) { left: 30%; transform: rotate(-36deg); }
-.gauge-mark:nth-child(4) { left: 40%; transform: rotate(-18deg); }
-.gauge-mark:nth-child(5) { left: 50%; transform: rotate(0deg); }
-.gauge-mark:nth-child(6) { left: 60%; transform: rotate(18deg); }
-.gauge-mark:nth-child(7) { left: 70%; transform: rotate(36deg); }
-.gauge-mark:nth-child(8) { left: 80%; transform: rotate(54deg); }
-.gauge-mark:nth-child(9) { left: 90%; transform: rotate(72deg); }
-
-/* 仪表填充效果 */
-.gauge-fill {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 0%;
-    background: linear-gradient(to top, var(--danger-color), var(--accent-color), var(--secondary-color));
-    border-radius: 150px 150px 0 0;
-    transform-origin: center bottom;
-    transition: height 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-    opacity: 0.7;
-}
-
-/* 仪表指针 */
-.gauge-needle {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    width: 4px;
-    height: 120px;
-    background-color: #e74c3c;
-    transform-origin: center bottom;
-    transform: translateX(-50%) rotate(0deg);
-    transition: transform 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-    z-index: 3;
-    box-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
-}
-
-.gauge-needle::before {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 15px;
-    height: 15px;
-    background-color: #e74c3c;
-    border-radius: 50%;
-    box-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
-}
-
-/* 风险百分比显示 */
-.risk-percentage {
-    position: absolute;
-    bottom: -60px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--danger-color);
-    text-align: center;
-    width: 100%;
-    transition: color 0.5s;
-    text-shadow: 0 2px 10px rgba(231, 76, 60, 0.2);
-}
-
-/* 根据风险程度变化颜色 */
-.risk-percentage.low {
-    color: var(--secondary-color);
-    text-shadow: 0 2px 10px rgba(46, 204, 113, 0.2);
-}
-
-.risk-percentage.medium {
-    color: var(--accent-color);
-    text-shadow: 0 2px 10px rgba(243, 156, 18, 0.2);
-}
-
-.risk-percentage.high {
-    color: var(--danger-color);
-    text-shadow: 0 2px 10px rgba(231, 76, 60, 0.2);
-}
-
-/* 风险描述 */
-.risk-description {
-    text-align: center;
-    margin-top: 70px;
-    font-size: 1.1rem;
-    color: var(--text-primary);
-    padding: 15px;
-    border-radius: 10px;
-    background-color: rgba(255, 255, 255, 0.5);
-    transition: background-color 0.5s;
-}
-
-/* 风险描述根据程度变化背景 */
-.risk-description.low {
-    background-color: rgba(46, 204, 113, 0.1);
-    border-left: 4px solid var(--secondary-color);
-}
-
-.risk-description.medium {
-    background-color: rgba(243, 156, 18, 0.1);
-    border-left: 4px solid var(--accent-color);
-}
-
-.risk-description.high {
-    background-color: rgba(231, 76, 60, 0.1);
-    border-left: 4px solid var(--danger-color);
-}
-
-/* 建议部分 */
-.recommendations {
-    margin-top: 40px;
-    padding: 25px;
-    border-radius: 10px;
-    background-color: rgba(255, 255, 255, 0.7);
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-}
-
-.recommendations h3 {
-    font-size: 1.3rem;
-    margin-bottom: 15px;
-    color: var(--primary-dark);
-    border-bottom: 2px solid rgba(74, 144, 226, 0.2);
-    padding-bottom: 10px;
-}
-
-.recommendations ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.recommendations li {
-    margin-bottom: 10px;
-    padding-left: 25px;
-    position: relative;
-}
-
-.recommendations li::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 6px;
-    width: 16px;
-    height: 16px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='9 11 12 14 22 4'/%3E%3Cpath d='M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11'/%3E%3C/svg%3E");
-    background-size: contain;
-    background-repeat: no-repeat;
-    opacity: 0.7;
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-    .container {
-        margin: 20px;
-    }
-    
-    .header {
-        padding: 30px 20px;
-    }
-    
-    .header h1 {
-        font-size: 2rem;
-    }
-    
-    .form-section {
-        padding: 20px;
-    }
-    
-    .step-title {
-        font-size: 0.8rem;
-    }
-    
-    .result-container {
-        padding: 30px 20px;
-    }
-}
-
-@media (max-width: 576px) {
-    .header h1 {
-        font-size: 1.8rem;
-    }
-    
-    .header p {
-        font-size: 1rem;
-    }
-    
-    .progress-indicator {
-        flex-wrap: wrap;
-    }
-    
-    .step {
-        flex: 0 0 50%;
-        margin-bottom: 15px;
-    }
-    
-    .step-connection {
-        display: none;
-    }
-    
-    .risk-percentage {
-        font-size: 2rem;
-    }
-}
+		        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 60px 40px 40px;
+            background: linear-gradient(135deg, #EBF4FF 0%, #FFFFFF 100%);
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 添加听力波形装饰 */
+        .header::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320' fill='%23ffffff'%3E%3Cpath d='M0,256L48,229.3C96,203,192,149,288,149.3C384,149,480,203,576,213.3C672,224,768,192,864,165.3C960,139,1056,117,1152,122.7C1248,128,1344,160,1392,176L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: cover;
+            opacity: 1;
+            z-index: 1;
+        }
+
+        /* 听力波形动画 */
+        .sound-wave {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 60px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .sound-wave span {
+            display: inline-block;
+            width: 3px;
+            margin: 0 2px;
+            background: rgba(74, 144, 226, 0.2);
+            border-radius: 50px;
+            animation: sound-wave-anim 1.2s infinite ease-in-out;
+        }
+
+        .sound-wave span:nth-child(1) { height: 10px; animation-delay: 0.1s; }
+        .sound-wave span:nth-child(2) { height: 15px; animation-delay: 0.2s; }
+        .sound-wave span:nth-child(3) { height: 25px; animation-delay: 0.3s; }
+        .sound-wave span:nth-child(4) { height: 35px; animation-delay: 0.4s; }
+        .sound-wave span:nth-child(5) { height: 40px; animation-delay: 0.5s; }
+        .sound-wave span:nth-child(6) { height: 30px; animation-delay: 0.6s; }
+        .sound-wave span:nth-child(7) { height: 20px; animation-delay: 0.7s; }
+        .sound-wave span:nth-child(8) { height: 15px; animation-delay: 0.8s; }
+        .sound-wave span:nth-child(9) { height: 10px; animation-delay: 0.9s; }
+
+        @keyframes sound-wave-anim {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(1.5); background: rgba(74, 144, 226, 0.5); }
+        }
+
+        /* 耳朵听力动画 */
+        .header-icon-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+        }
+
+        .header-icon {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 56px;
+            color: var(--primary-dark);
+            z-index: 2;
+        }
+
+        /* 听力波纹动画 */
+        .pulse-rings {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+        }
+
+        .pulse-ring {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            border-radius: 50%;
+            border: 2px solid var(--primary-color);
+            animation: pulse-ring 3s linear infinite;
+            opacity: 0;
+        }
+
+        .pulse-ring:nth-child(1) {
+            width: 40px;
+            height: 40px;
+            animation-delay: 0s;
+        }
+
+        .pulse-ring:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            animation-delay: 0.6s;
+        }
+
+        .pulse-ring:nth-child(3) {
+            width: 80px;
+            height: 80px;
+            animation-delay: 1.2s;
+        }
+
+        .pulse-ring:nth-child(4) {
+            width: 100px;
+            height: 100px;
+            animation-delay: 1.8s;
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                transform: translate(-50%, -50%) scale(0.3);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* 删除频率仪表盘样式，但保留其他动画 */
+
+        /* 听力损失图表装饰 */
+        .hearing-chart {
+            position: absolute;
+            bottom: 40px;
+            left: 40px;
+            width: 100px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            padding: 5px;
+        }
+
+        .chart-bar {
+            flex: 1;
+            margin: 0 1px;
+            background: var(--primary-light);
+            animation: chart-bar-anim 4s ease-in-out infinite alternate;
+        }
+
+        .chart-bar:nth-child(1) { height: 30%; animation-delay: 0.0s; }
+        .chart-bar:nth-child(2) { height: 60%; animation-delay: 0.2s; }
+        .chart-bar:nth-child(3) { height: 40%; animation-delay: 0.4s; }
+        .chart-bar:nth-child(4) { height: 70%; animation-delay: 0.6s; }
+        .chart-bar:nth-child(5) { height: 30%; animation-delay: 0.8s; }
+        .chart-bar:nth-child(6) { height: 20%; animation-delay: 1.0s; background: var(--danger-color); }
+        .chart-bar:nth-child(7) { height: 10%; animation-delay: 1.2s; background: var(--danger-color); }
+
+        @keyframes chart-bar-anim {
+            0% { height: var(--height); }
+            50% { height: calc(var(--height) + 20%); }
+            100% { height: var(--height); }
+        }
+		        .header h1 {
+            color: var(--primary-color);
+            font-size: 36px;
+            margin: 0 0 25px;
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+        }
+
+        .header h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 3px;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        /* 修改进度指示器样式，添加箭头 */
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            margin: 40px 0 0;
+            padding: 20px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+            position: relative;
+            z-index: 5;
+        }
+
+        /* 移除原来的虚线连接样式 */
+        .progress-indicator::before {
+            content: none;
+        }
+
+        .progress-step {
+            display: flex;
+            align-items: center;
+            position: relative;
+            margin: 0 30px;
+            z-index: 2;
+        }
+
+        /* 修改步骤指示器的箭头样式，防止与圆环重叠 */
+        .progress-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='5' y1='12' x2='19' y2='12'%3E%3C/line%3E%3Cpolyline points='12 5 19 12 12 19'%3E%3C/polyline%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            right: -45px; /* 修改位置，将箭头移远一些 */
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .step-number {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-right: 12px;
+            transition: var(--transition);
+            position: relative;
+            box-shadow: 0 2px 10px rgba(74, 144, 226, 0.1);
+        }
+
+        .step-number.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(74, 144, 226, 0.2);
+        }
+
+        /* 步骤图标动画 */
+        .step-number::before {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.2;
+            transition: var(--transition);
+            animation: step-icon-pulse 2s infinite ease-in-out;
+        }
+
+        .progress-step:nth-child(1) .step-number::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E");
+        }
+
+        .progress-step:nth-child(2) .step-number::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 20V10'/%3E%3Cpath d='M12 20V4'/%3E%3Cpath d='M6 20v-6'/%3E%3C/svg%3E");
+        }
+
+        .progress-step:nth-child(3) .step-number::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 12h-4l-3 9L9 3l-3 9H2'/%3E%3C/svg%3E");
+        }
+
+        .progress-step:nth-child(4) .step-number::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z'/%3E%3Cpath d='M16.5 9.5L12 14 8.5 9.5h-3v9h14v-9h-3z'/%3E%3C/svg%3E");
+        }
+
+        @keyframes step-icon-pulse {
+            0%, 100% { transform: scale(1); opacity: 0.2; }
+            50% { transform: scale(1.2); opacity: 0.4; }
+        }
+
+        .step-number.active::before {
+            opacity: 0.7;
+            animation: step-icon-pulse 1.5s infinite ease-in-out;
+        }
+
+        .step-label {
+            font-size: 15px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .active + .step-label {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+		        .form-section {
+            background: white;
+            padding: 40px;
+            border-radius: var(--border-radius);
+            margin: 0 40px 30px;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.03);
+            transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.6s ease;
+            border: 1px solid rgba(74, 144, 226, 0.05);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        /* 为进入视图的卡片添加动画类 */
+        .form-section.animate-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 卡片悬浮效果 */
+        .form-section:hover {
+            transform: translateY(-10px) scale(1.01);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 科技感装饰线条 */
+        .form-section::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+            border-radius: 4px;
+        }
+
+        /* 添加电路板背景元素 */
+        .form-section::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 120px;
+            height: 120px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 24 24' stroke-width='0.3' stroke='%234A90E2' fill='none'%3E%3Cpath d='M15 5v14'/%3E%3Cpath d='M9 9a6 6 0 0 0 0 6'/%3E%3Cpath d='M9 9h6'/%3E%3Cpath d='M9 15h6'/%3E%3Ccircle cx='9' cy='9' r='1'/%3E%3Ccircle cx='9' cy='15' r='1'/%3E%3Ccircle cx='15' cy='9' r='1'/%3E%3Ccircle cx='15' cy='15' r='1'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            opacity: 0.05;
+            z-index: 0;
+        }
+
+        .form-section h2 {
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(74, 144, 226, 0.1);
+            font-weight: 600;
+        }
+
+        .section-icon {
+            margin-right: 15px;
+            font-size: 24px;
+            color: var(--primary-color);
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(74, 144, 226, 0.08);
+            border-radius: 10px;
+            transition: var(--transition);
+        }
+
+        .form-section:hover .section-icon {
+            transform: scale(1.1) rotate(-5deg);
+            background: rgba(74, 144, 226, 0.1);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 15px;
+            margin-bottom: 10px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+        }
+
+        /* 修改表单标签前的图标样式，改为使用Iconify */
+        .form-group label::before {
+            content: "";
+            display: none;
+        }
+
+        /* 添加Iconify图标到表单标签 */
+        .form-group iconify-icon {
+            margin-right: 8px;
+            font-size: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .form-group:hover iconify-icon {
+            transform: scale(1.2);
+        }
+
+        /* 1. 提交按钮霓虹脉冲效果 */
+        .submit-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 18px 48px;
+            border-radius: 14px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 280px;
+            box-shadow: 0 10px 25px rgba(74, 144, 226, 0.25);
+            position: relative;
+            overflow: hidden;
+            /* 添加霓虹效果 */
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            animation: neon-pulse 2s infinite;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        @keyframes neon-pulse {
+            0%, 100% {
+                box-shadow: 0 0 15px 0 rgba(74, 144, 226, 0.5),
+                           0 0 30px 0 rgba(74, 144, 226, 0.3),
+                           0 0 45px 0 rgba(74, 144, 226, 0.1);
+            }
+            50% {
+                box-shadow: 0 0 25px 0 rgba(74, 144, 226, 0.8),
+                           0 0 40px 0 rgba(74, 144, 226, 0.5),
+                           0 0 60px 0 rgba(74, 144, 226, 0.3);
+            }
+        }
+
+        /* 点击波纹效果 */
+        .submit-btn-ripple {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: transparent;
+            pointer-events: none;
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(0);
+            animation: ripple-effect 0.8s linear;
+        }
+
+        @keyframes ripple-effect {
+            to {
+                transform: scale(2.5);
+                opacity: 0;
+            }
+        }
+
+        /* 2. 输入选择框现代化效果 */
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #E2E8F0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            background: white;
+            color: var(--text-primary);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.01);
+            /* 添加选择状态样式 */
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1), 
+                        0 5px 15px rgba(74, 144, 226, 0.1);
+            outline: none;
+            transform: translateY(-2px);
+        }
+
+        .form-control:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        /* 选中状态 */
+        .form-control option {
+            padding: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .form-control option:hover {
+            background-color: rgba(74, 144, 226, 0.1);
+        }
+
+        .form-control option:checked {
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.2), rgba(74, 144, 226, 0.1));
+            font-weight: 600;
+        }
+
+        /* 3. 结果展示区3D效果 */
+        .result-container {
+            display: none;
+            margin: 0 40px 40px;
+            padding: 50px 40px;
+            border-radius: var(--border-radius);
+            background: white;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+            /* 添加3D效果 */
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            transform: translateZ(0);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .result-container.show {
+            display: block;
+            animation: result-appear 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes result-appear {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) rotateX(10deg);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) rotateX(0);
+            }
+        }
+
+        /* 风险仪表盘3D效果 */
+        .risk-meter-container {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            margin: 40px auto;
+            transform-style: preserve-3d;
+            animation: float-meter 6s ease-in-out infinite;
+        }
+
+        @keyframes float-meter {
+            0%, 100% {
+                transform: translateY(0) rotate(0);
+            }
+            50% {
+                transform: translateY(-10px) rotate(1deg);
+            }
+        }
+
+        .risk-meter {
+            width: 250px;
+            height: 250px;
+            margin: 30px auto;
+            position: relative;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08),
+                        0 30px 60px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            transition: var(--transition);
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            z-index: 2;
+            transform-style: preserve-3d;
+            transform: translateZ(20px);
+        }
+
+        /* 推荐卡片3D效果 */
+        .recommendation-item {
+            background: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(74, 144, 226, 0.05);
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .recommendation-item:hover {
+            transform: translateY(-8px) rotateY(2deg);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .recommendation-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+            transform: translateZ(10px);
+        }
+
+        .recommendation-item:hover .recommendation-icon {
+            transform: scale(1.1) rotate(-5deg) translateZ(20px);
+        }
+
+        .recommendation-icon::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 15px;
+            z-index: -1;
+            opacity: 0.3;
+            filter: blur(3px);
+        }
+
+        .recommendation-icon i {
+            color: white;
+            font-size: 28px;
+        }
+
+        .recommendation-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+
+        .recommendation-desc {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-size: 15px;
+        }
+		        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes countUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 992px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .progress-indicator {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 20px 15px;
+            }
+            
+            /* 修改响应式下的箭头为垂直方向 */
+            .progress-step:not(:last-child)::after {
+                content: '';
+                position: absolute;
+                width: 20px;
+                height: 20px;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='5' x2='12' y2='19'%3E%3C/line%3E%3Cpolyline points='19 12 12 19 5 12'%3E%3C/polyline%3E%3C/svg%3E");
+                background-size: contain;
+                background-repeat: no-repeat;
+                top: 100%;
+                left: 15px;
+                right: auto;
+                transform: translateY(10px);
+                z-index: 1;
+            }
+            
+            .progress-step {
+                margin: 15px 0;
+            }
+            
+            .form-section {
+                margin: 0 20px 30px;
+                padding: 30px 20px;
+            }
+            
+            .header {
+                padding: 40px 20px 30px;
+            }
+            
+            .header h1 {
+                font-size: 28px;
+            }
+            
+            .result-container {
+                margin: 0 20px 30px;
+                padding: 30px 20px;
+            }
+            
+            .risk-meter-container {
+                width: 280px;
+                height: 280px;
+            }
+            
+            .risk-meter {
+                width: 220px;
+                height: 220px;
+            }
+            
+            .risk-gauge {
+                width: 280px;
+                height: 280px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                margin: 20px auto;
+            }
+            
+            .header-icon-container {
+                width: 90px;
+                height: 90px;
+            }
+            
+            .header-icon {
+                font-size: 40px;
+            }
+            
+            .submit-btn {
+                min-width: auto;
+                width: 100%;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+            
+            .action-btn {
+                width: 100%;
+            }
+        }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tensorflow/4.2.0/tf.min.js"></script>
-    <script src="model.js"></script>
-    <script src="script.js"></script>
 </head>
 <body>
+    <!-- 添加粒子背景画布 -->
+    <canvas id="particles-canvas"></canvas>
+    
     <div class="container">
-        <!-- 装饰性图标 -->
+        <!-- 装饰元素 -->
         <div class="ear-icon-decoration"></div>
         <div class="brain-icon-decoration"></div>
         
-        <!-- 头部区域 -->
         <header class="header">
-            <!-- 脉冲环动画 -->
-            <div class="pulse-ring"></div>
-            <div class="pulse-ring"></div>
-            <div class="pulse-ring"></div>
-            
-            <!-- 图标和标题 -->
+            <!-- 头部图标 -->
             <div class="header-icon-container">
-                <div class="header-icon ear-icon"></div>
-                <div class="header-icon brain-icon"></div>
+                <div class="pulse-rings">
+                    <div class="pulse-ring"></div>
+                    <div class="pulse-ring"></div>
+                    <div class="pulse-ring"></div>
+                    <div class="pulse-ring"></div>
+                </div>
+                <i class="fas fa-stethoscope header-icon"></i>
             </div>
             
             <h1>High-Frequency Hearing Loss Prediction</h1>
-            <p>Fill in the following information to predict your risk of high-frequency hearing loss. This tool uses machine learning to estimate risk based on clinical and lifestyle factors.</p>
+            <p>Personalized high-frequency hearing loss risk prediction system based on machine learning model. This prediction is for reference only. If you have any concerns, please seek medical attention in time.</p>
             
-            <!-- 声波动画 -->
-            <div class="sound-wave"></div>
+            <!-- 听力损失图表装饰 -->
+            <div class="hearing-chart">
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+            </div>
             
-            <!-- 步骤指示器 -->
+            <!-- 听力波形动画 -->
+            <div class="sound-wave">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            
             <div class="progress-indicator">
-                <div class="step active" id="step1">
-                    <div class="step-number">1</div>
-                    <div class="step-title">Basic Information</div>
-                    <div class="step-connection"></div>
+                <div class="progress-step">
+                    <div class="step-number active">1</div>
+                    <span class="step-label">Basic Information</span>
                 </div>
-                <div class="step" id="step2">
+                <div class="progress-step">
                     <div class="step-number">2</div>
-                    <div class="step-title">Lifestyle Habits</div>
-                    <div class="step-connection"></div>
+                    <span class="step-label">Lifestyle Habits</span>
                 </div>
-                <div class="step" id="step3">
+                <div class="progress-step">
                     <div class="step-number">3</div>
-                    <div class="step-title">Medical History</div>
-                    <div class="step-connection"></div>
+                    <span class="step-label">Medical History</span>
                 </div>
-                <div class="step" id="step4">
+                <div class="progress-step">
                     <div class="step-number">4</div>
-                    <div class="step-title">Clinical Tests</div>
+                    <span class="step-label">Clinical Test Results</span>
                 </div>
             </div>
         </header>
-        
-        <!-- 表单部分 -->
-        <form id="hearing-form">
-            <!-- 基本信息部分 -->
-            <section class="form-section basic" id="section1">
-                <h2>Basic Information</h2>
-                
+
+        <!-- 第一部分：基本信息 -->
+        <div class="form-section">
+            <h2>
+                <div class="section-icon"><i class="fas fa-user-md"></i></div>
+                Basic Information
+            </h2>
+            <div class="form-grid">
                 <div class="form-group">
-                    <label for="age_rank">Age Rank</label>
+                    <label for="age_rank">
+                        <iconify-icon icon="fa-solid:calendar-alt" style="color: #4a90e2;"></iconify-icon>
+                        Age Rank
+                    </label>
                     <select id="age_rank" class="form-control" required>
-                        <option value="">Select your age rank</option>
-                        <option value="1">40-49 years</option>
-                        <option value="2">50-59 years</option>
-                        <option value="3">60-69 years</option>
-                        <option value="4">70-79 years</option>
-                        <option value="5">80+ years</option>
+                        <option value="">Select Age Rank</option>
+                        <option value="0">20-24 years old</option>
+                        <option value="1">25-29 years old</option>
+                        <option value="2">30-34 years old</option>
+                        <option value="3">35-39 years old</option>
+                        <option value="4">40-44 years old</option>
+                        <option value="5">45-49 years old</option>
+                        <option value="6">50-54 years old</option>
+                        <option value="7">55-59 years old</option>
+                        <option value="8">60-64 years old</option>
+                        <option value="9">65-69 years old</option>
+                        <option value="10">70-74 years old</option>
+                        <option value="11">75-80 years old</option>
+                        <option value="12">80+ years old</option>
                     </select>
                 </div>
-                
+
                 <div class="form-group">
-                    <label for="gender">Gender</label>
-                    <select id="gender" class="form-control" required>
-                        <option value="">Select your gender</option>
-                        <option value="0">Female</option>
+                    <label for="sex">
+                        <iconify-icon icon="healthicons:sexual-reproductive-health" style="color: #4a90e2;"></iconify-icon>
+                        Gender
+                    </label>
+                    <select id="sex" class="form-control" required>
+                        <option value="">Select Gender</option>
                         <option value="1">Male</option>
+                        <option value="2">Female</option>
                     </select>
                 </div>
-                
+
                 <div class="form-group">
-                    <label for="education_level">Education Level</label>
-                    <select id="education_level" class="form-control" required>
-                        <option value="">Select your education level</option>
-                        <option value="1">Less than high school</option>
-                        <option value="2">High school</option>
-                        <option value="3">Some college</option>
-                        <option value="4">College graduate or above</option>
+                    <label for="Education">
+                        <iconify-icon icon="carbon:education" style="color: #4a90e2;"></iconify-icon>
+                        Education Level
+                    </label>
+                    <select id="Education" class="form-control" required>
+                        <option value="">Select Education Level</option>
+                        <option value="1">Elementary school or lower</option>
+                        <option value="2">Primary</option>
+                        <option value="3">Secondary</option>
+                        <option value="4">College</option>
+                        <option value="5">Higher</option>
                     </select>
                 </div>
-                
+
                 <div class="form-group">
-                    <label for="race">Race</label>
+                    <label for="race">
+                        <iconify-icon icon="healthicons:people" style="color: #4a90e2;"></iconify-icon>
+                        Race
+                    </label>
                     <select id="race" class="form-control" required>
-                        <option value="">Select your race</option>
-                        <option value="1">Mexican American</option>
-                        <option value="2">Other Hispanic</option>
-                        <option value="3">Non-Hispanic White</option>
-                        <option value="4">Non-Hispanic Black</option>
-                        <option value="5">Other Race</option>
+                        <option value="">Select Race</option>
+                        <option value="1">Han Chinese</option>
+                        <option value="2">Korean ethnic group</option>
+                        <option value="3">Yao ethnic group</option>
+                        <option value="4">Other ethnic group</option>
                     </select>
                 </div>
-                
-                <button type="button" class="next-btn submit-btn" onclick="nextStep(1)">Next</button>
-            </section>
-			            <!-- 生活习惯部分 -->
-            <section class="form-section lifestyle" id="section2" style="display: none;">
-                <h2>Lifestyle Habits</h2>
-                
+            </div>
+        </div>
+		        <!-- 第二部分：生活习惯 -->
+        <div class="form-section">
+            <h2>
+                <div class="section-icon"><i class="fas fa-walking"></i></div>
+                Lifestyle Habits
+            </h2>
+            <div class="form-grid">
                 <div class="form-group">
-                    <label for="physical_labor">Physical Labor</label>
-                    <select id="physical_labor" class="form-control" required>
-                        <option value="">Select physical labor level</option>
-                        <option value="0">No</option>
-                        <option value="1">Yes</option>
+                    <label for="activities">
+                        <iconify-icon icon="medical-icon:physical-therapy" style="color: #4a90e2;"></iconify-icon>
+                        Physical Labor
+                    </label>
+                    <select id="activities" class="form-control" required>
+                        <option value="">Select Activity Level</option>
+                        <option value="3">High</option>
+                        <option value="2">Moderate</option>
+                        <option value="1">Low</option>
                     </select>
-                    <span class="form-hint">Do you regularly engage in physical labor at work?</span>
                 </div>
-                
+
                 <div class="form-group">
-                    <label for="dairy_consumption">Dairy Consumption</label>
-                    <select id="dairy_consumption" class="form-control" required>
-                        <option value="">Select dairy consumption frequency</option>
+                    <label for="dairy">
+                        <iconify-icon icon="mdi:food-drumstick" style="color: #4a90e2;"></iconify-icon>
+                        Frequency of Dairy Products Consumption
+                    </label>
+                    <select id="dairy" class="form-control" required>
+                        <option value="">Select Intake Frequency</option>
+                        <option value="1">5-7 days per week</option>
+                        <option value="2">3-4 days per week</option>
+                        <option value="3">1-2 days per week</option>
+                        <option value="4">≤3 days per month</option>
+                        <option value="5">Never eat</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="drink">
+                        <iconify-icon icon="mdi:glass-mug-variant" style="color: #4a90e2;"></iconify-icon>
+                        Alcohol Consumption Status
+                    </label>
+                    <select id="drink" class="form-control" required>
+                        <option value="">Select Alcohol Consumption Status</option>
+                        <option value="2">Current</option>
+                        <option value="1">Former</option>
                         <option value="0">Never</option>
-                        <option value="1">Rarely</option>
-                        <option value="2">Sometimes</option>
-                        <option value="3">Often</option>
-                        <option value="4">Very Often</option>
                     </select>
-                    <span class="form-hint">How often do you consume dairy products?</span>
                 </div>
-                
+
                 <div class="form-group">
-                    <label for="alcohol_consumption">Alcohol Consumption</label>
-                    <select id="alcohol_consumption" class="form-control" required>
-                        <option value="">Select alcohol consumption level</option>
+                    <label for="smoke">
+                        <iconify-icon icon="carbon:smoke" style="color: #4a90e2;"></iconify-icon>
+                        Smoking Status
+                    </label>
+                    <select id="smoke" class="form-control" required>
+                        <option value="">Select Smoking Status</option>
+                        <option value="2">Current</option>
+                        <option value="1">Former</option>
                         <option value="0">Never</option>
-                        <option value="1">Rarely</option>
-                        <option value="2">Sometimes</option>
-                        <option value="3">Often</option>
-                    </select>
-                    <span class="form-hint">How often do you consume alcoholic beverages?</span>
-                </div>
-                
-                <div class="form-group">
-                    <label for="smoking_status">Smoking Status</label>
-                    <select id="smoking_status" class="form-control" required>
-                        <option value="">Select your smoking status</option>
-                        <option value="0">Never smoked</option>
-                        <option value="1">Former smoker</option>
-                        <option value="2">Current smoker</option>
                     </select>
                 </div>
-                
-                <button type="button" class="prev-btn submit-btn" onclick="prevStep(2)">Previous</button>
-                <button type="button" class="next-btn submit-btn" onclick="nextStep(2)">Next</button>
-            </section>
-            
-            <!-- 医疗历史部分 -->
-            <section class="form-section medical" id="section3" style="display: none;">
-                <h2>Medical History</h2>
-                
+            </div>
+        </div>
+
+        <!-- 第三部分：健康状况 -->
+        <div class="form-section">
+            <h2>
+                <div class="section-icon"><i class="fas fa-notes-medical"></i></div>
+                Medical History
+            </h2>
+            <div class="form-grid">
                 <div class="form-group">
-                    <label for="hearing_status">Hearing Status</label>
-                    <select id="hearing_status" class="form-control" required>
-                        <option value="">Select your hearing status</option>
-                        <option value="1">Excellent</option>
-                        <option value="2">Good</option>
-                        <option value="3">A little trouble</option>
-                        <option value="4">Moderate trouble</option>
-                        <option value="5">A lot of trouble</option>
-                        <option value="6">Deaf</option>
+                    <label for="hearing">
+                        <iconify-icon icon="fa-solid:deaf" style="color: #4a90e2;"></iconify-icon>
+                        Self-reported Hearing Status
+                    </label>
+                    <select id="hearing" class="form-control" required>
+                        <option value="">Select Hearing Condition</option>
+                        <option value="0">Good</option>
+                        <option value="2">Fair</option>
+                        <option value="3">Poor</option>
                     </select>
-                    <span class="form-hint">How would you rate your overall hearing ability?</span>
                 </div>
-                
+
                 <div class="form-group">
-                    <label for="tinnitus">Tinnitus</label>
+                    <label for="tinnitus">
+                        <iconify-icon icon="fa-solid:volume-up" style="color: #4a90e2;"></iconify-icon>
+                        Tinnitus Duration (≥ 5 minutes/year)
+                    </label>
                     <select id="tinnitus" class="form-control" required>
-                        <option value="">Do you experience tinnitus?</option>
-                        <option value="0">No</option>
+                        <option value="">Select Tinnitus Status</option>
                         <option value="1">Yes</option>
-                    </select>
-                    <span class="form-hint">Tinnitus is the perception of noise or ringing in the ears.</span>
-                </div>
-                
-                <div class="form-group">
-                    <label for="blood_pressure">Blood Pressure</label>
-                    <select id="blood_pressure" class="form-control" required>
-                        <option value="">Select your blood pressure status</option>
-                        <option value="0">Normal</option>
-                        <option value="1">Elevated</option>
-                        <option value="2">Hypertension</option>
+                        <option value="0">No</option>
                     </select>
                 </div>
-                
-                <button type="button" class="prev-btn submit-btn" onclick="prevStep(3)">Previous</button>
-                <button type="button" class="next-btn submit-btn" onclick="nextStep(3)">Next</button>
-            </section>
-	            <!-- 临床测试结果部分 -->
-            <section class="form-section clinical" id="section4" style="display: none;">
-                <h2>Clinical Test Results</h2>
-                
+
                 <div class="form-group">
-                    <label for="triglycerides">Triglycerides (mg/dL)</label>
-                    <input type="number" id="triglycerides" class="form-control" min="0" step="1" required>
-                    <span class="form-hint">Normal range: less than 150 mg/dL</span>
+                    <label for="hbp">
+                        <iconify-icon icon="healthicons:blood-pressure" style="color: #4a90e2;"></iconify-icon>
+                        Blood Pressure Classification
+                    </label>
+                    <select id="hbp" class="form-control" required>
+                        <option value="">Select Systolic Blood Pressure</option>
+                        <option value="0">
+                            Systolic＜130 mmHg
+                            Diastolic＜80mmHg
+                        </option>
+                        <option value="1">
+                            Systolic: 130-139 mmHg
+                            Diastolic: 80-89 mmHg
+                        </option>
+                        <option value="2">
+                            Systolic: 140-159 mmHg
+                            Diastolic: 90-99 mmHg
+                        </option>
+                        <option value="3">
+                            Systolic: ≥160 mmHg
+                            Diastolic: ≥100 mmHg
+                        </option>
+                    </select>
                 </div>
-                
+
+                <!-- 添加一个空的 div 元素，以填充 Medical History 标签页的空缺 -->
+                <div class="form-group"></div>
+            </div>
+        </div>
+		        <!-- 第四部分： 临床测试结果 -->
+        <div class="form-section">
+            <h2>
+                <div class="section-icon"><i class="fas fa-vial"></i></div>
+                Clinical Test Results
+            </h2>
+            <div class="form-grid">
                 <div class="form-group">
-                    <label for="cholesterol">Total Cholesterol (mg/dL)</label>
-                    <input type="number" id="cholesterol" class="form-control" min="0" step="1" required>
-                    <span class="form-hint">Normal range: less than 200 mg/dL</span>
+                    <label for="tg">
+                        <iconify-icon icon="fa-solid:vial" style="color: #4a90e2;"></iconify-icon>
+                        Triglycerides (mmol/L)
+                    </label>
+                    <select id="tg" class="form-control" required>
+                        <option value="">Select Triglyceride Level</option>
+                        <option value="0">&lt; 1.7</option>
+                        <option value="1">1.7 - 2.3</option>
+                        <option value="2">≥ 2.3</option>
+                    </select>
                 </div>
-                
+
                 <div class="form-group">
-                    <label for="fasting_blood_glucose">Fasting Blood Glucose (mg/dL)</label>
-                    <input type="number" id="fasting_blood_glucose" class="form-control" min="0" step="1" required>
-                    <span class="form-hint">Normal range: less than 100 mg/dL</span>
+                    <label for="cho">
+                        <iconify-icon icon="mdi:test-tube" style="color: #4a90e2;"></iconify-icon>
+                        Cholesterol (mmol/L)
+                    </label>
+                    <select id="cho" class="form-control" required>
+                        <option value="">Select Cholesterol Level</option>
+                        <option value="0">&lt; 5.2</option>
+                        <option value="1">5.2 - 6.2</option>
+                        <option value="2">≥ 6.2</option>
+                    </select>
                 </div>
-                
+
                 <div class="form-group">
-                    <label for="bmi">Body Mass Index (BMI)</label>
-                    <input type="number" id="bmi" class="form-control" min="0" step="0.1" required>
-                    <span class="form-hint">Normal range: 18.5 to 24.9</span>
+                    <label for="glu">
+                        <iconify-icon icon="fa-solid:tint" style="color: #4a90e2;"></iconify-icon>
+                        Fasting Blood Glucose (mmol/L)
+                    </label>
+                    <select id="glu" class="form-control" required>
+                        <option value="">Select Fasting Blood Glucose Level</option>
+                        <option value="0">&lt; 5.6</option>
+                        <option value="1">5.6 - 6.9</option>
+                        <option value="2">≥ 7.0</option>
+                    </select>
                 </div>
-                
-                <button type="button" class="prev-btn submit-btn" onclick="prevStep(4)">Previous</button>
-                <div class="submit-btn-container">
-                    <button type="button" class="submit-btn" onclick="predict()">Predict Risk</button>
+
+                <div class="form-group">
+                    <label for="bmi">
+                        <iconify-icon icon="fa-solid:weight" style="color: #4a90e2;"></iconify-icon>
+                        Body Mass Index (BMI)
+                    </label>
+                    <select id="bmi" class="form-control" required>
+                        <option value="">Select Body Mass Index Level</option>
+                        <option value="0">&lt; 18.5</option>
+                        <option value="1">18.5 - 24.9</option>
+                        <option value="2">≥25</option>
+                    </select>
                 </div>
-            </section>
-        </form>
-        
+            </div>
+        </div>
+
+        <!-- 提交按钮 -->
+        <div class="submit-btn-container">
+            <button class="submit-btn" onclick="predict()">
+                <i class="fas fa-stethoscope"></i>
+                Start Prediction
+                <div class="submit-btn-ripple"></div>
+            </button>
+            <!-- 按钮波纹效果 -->
+            <div class="submit-btn-rings">
+                <div class="submit-btn-ring"></div>
+                <div class="submit-btn-ring"></div>
+            </div>
+        </div>
+
         <!-- 结果显示区域 -->
-        <div class="result-container" id="result-container">
-            <h2 class="result-title">Your High-Frequency Hearing Loss Risk</h2>
-            
+        <div class="result-container" id="result">
             <!-- 风险仪表盘 -->
             <div class="risk-meter-container">
                 <div class="risk-meter">
-                    <!-- 刻度线 -->
-                    <div class="gauge-mark"></div>
-                    <div class="gauge-mark"></div>
-                    <div class="gauge-mark"></div>
-                    <div class="gauge-mark"></div>
-                    <div class="gauge-mark"></div>
-                    <div class="gauge-mark"></div>
-                    <div class="gauge-mark"></div>
-                    <div class="gauge-mark"></div>
-                    <div class="gauge-mark"></div>
-                    
-                    <!-- 仪表填充 -->
-                    <div class="gauge-fill" id="gauge-fill"></div>
-                    
-                    <!-- 指针 -->
-                    <div class="gauge-needle" id="gauge-needle"></div>
+                    <div class="risk-percentage" id="risk-value">--</div>
+                    <div class="risk-label">Risk Level</div>
                 </div>
-                
-                <!-- 风险百分比 -->
-                <div class="risk-percentage" id="risk-percentage">0%</div>
+                <div class="risk-gauge">
+                    <div class="gauge-ring"></div>
+                    <div class="gauge-marks">
+                        <div class="gauge-mark"></div>
+                        <div class="gauge-mark"></div>
+                        <div class="gauge-mark"></div>
+                        <div class="gauge-mark"></div>
+                        <div class="gauge-mark"></div>
+                        <div class="gauge-mark"></div>
+                        <div class="gauge-mark"></div>
+                    </div>
+                    <div class="gauge-needle"></div>
+                </div>
             </div>
-            
-            <!-- 风险描述 -->
-            <div class="risk-description" id="risk-description">
-                Your risk of high-frequency hearing loss will be displayed here.
+
+            <div class="risk-description">
+                Based on the information you provided, our machine learning model analysis indicates that your risk of developing high-frequency hearing loss is
+                <strong id="risk-percentage">--</strong>.
+                <br><br>
+                <small>* This prediction is based on a statistical model and is for reference only. It should not be used as a medical diagnosis. If you have concerns about your hearing health, it is recommended to seek medical attention for examination.</small>
             </div>
-            
-            <!-- 建议 -->
-            <div class="recommendations">
-                <h3>Recommendations</h3>
-                <ul id="recommendations-list">
-                    <li>Complete the form to receive personalized recommendations.</li>
-                </ul>
+			            <div class="recommendations">
+                <h3>
+                    <i class="fas fa-clipboard-list"></i>
+                    Professional Recommendations
+                </h3>
+                <div class="recommendations-grid">
+                    <div class="recommendation-item">
+                        <div class="recommendation-icon">
+                            <iconify-icon icon="healthicons:health-worker-form" width="28" height="28" style="color: white;"></iconify-icon>
+                        </div>
+                        <div class="recommendation-title">Regular Check-ups</div>
+                        <div class="recommendation-desc">It is recommended to have a professional hearing test once a year to understand your hearing health.</div>
+                    </div>
+
+                    <div class="recommendation-item">
+                        <div class="recommendation-icon">
+                            <iconify-icon icon="healthicons:ear" width="28" height="28" style="color: white;"></iconify-icon>
+                        </div>
+                        <div class="recommendation-title">Avoid Noise</div>
+                        <div class="recommendation-desc">Try to avoid prolonged exposure to high-decibel environments and take protective measures when necessary.</div>
+                    </div>
+
+                    <div class="recommendation-item">
+                        <div class="recommendation-icon">
+                            <iconify-icon icon="healthicons:sti" width="28" height="28" style="color: white;"></iconify-icon>
+                        </div>
+                        <div class="recommendation-title">Regular Schedule</div>
+                        <div class="recommendation-desc">Maintain a regular sleep schedule and avoid over-fatigue that affects hearing health.</div>
+                    </div>
+
+                    <div class="recommendation-item">
+                        <div class="recommendation-icon">
+                            <iconify-icon icon="healthicons:city-worker" width="28" height="28" style="color: white;"></iconify-icon>
+                        </div>
+                        <div class="recommendation-title">Seek Medical Attention</div>
+                        <div class="recommendation-desc">If you experience hearing discomfort, it is recommended to seek medical attention for examination and treatment.</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
+    <!-- 按顺序加载所需文件 -->
+    <script src="model.js"></script>
+    <script src="script.js"></script>
     <script>
-        // 当DOM加载完成后初始化
+        // Check if required components are loaded correctly
+        window.addEventListener('load', function() {
+            // Check if the model is loaded correctly
+            if (typeof window.predict !== 'function') {
+                console.error('Model not loaded properly');
+                alert('Model loading failed, please refresh the page and try again.');
+                return;
+            }
+
+            console.log('All components loaded successfully.');
+        });
+        
+        // 粒子背景效果
         document.addEventListener('DOMContentLoaded', function() {
-            // 创建粒子效果
-            createParticles();
+            const canvas = document.getElementById('particles-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // 设置画布大小
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            
+            // 粒子属性
+            const particlesArray = [];
+            const numberOfParticles = 100;
+            const colors = ['rgba(74, 144, 226, 0.5)', 'rgba(247, 183, 51, 0.5)'];
+            
+            // 鼠标位置
+            let mouse = {
+                x: null,
+                y: null,
+                radius: 150
+            };
+            
+            window.addEventListener('mousemove', function(event) {
+                mouse.x = event.x;
+                mouse.y = event.y;
+            });
+            
+            // 粒子类
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 3 + 1;
+                    this.speedX = Math.random() * 1 - 0.5;
+                    this.speedY = Math.random() * 1 - 0.5;
+                    this.color = colors[Math.floor(Math.random() * colors.length)];
+                }
+                
+                // 更新粒子位置
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    
+                    // 边界检查
+                    if (this.x < 0 || this.x > canvas.width) {
+                        this.speedX = -this.speedX;
+                    }
+                    if (this.y < 0 || this.y > canvas.height) {
+                        this.speedY = -this.speedY;
+                    }
+                    
+                    // 鼠标交互
+                    const dx = mouse.x - this.x;
+                    const dy = mouse.y - this.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < mouse.radius) {
+                        const forceDirectionX = dx / distance;
+                        const forceDirectionY = dy / distance;
+                        const force = (mouse.radius - distance) / mouse.radius;
+                        
+                        this.speedX += forceDirectionX * force * 0.6;
+                        this.speedY += forceDirectionY * force * 0.6;
+                    }
+                    
+                    // 限制速度
+                    this.speedX = Math.max(-2, Math.min(2, this.speedX));
+                    this.speedY = Math.max(-2, Math.min(2, this.speedY));
+                }
+                
+                // 绘制粒子
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                }
+            }
+            
+            // 初始化粒子
+            function init() {
+                for (let i = 0; i < numberOfParticles; i++) {
+                    particlesArray.push(new Particle());
+                }
+            }
+            
+            // 连接粒子
+            function connect() {
+                for (let a = 0; a < particlesArray.length; a++) {
+                    for (let b = a; b < particlesArray.length; b++) {
+                        const dx = particlesArray[a].x - particlesArray[b].x;
+                        const dy = particlesArray[a].y - particlesArray[b].y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (distance < 150) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = 'rgba(74, 144, 226, ' + (1 - distance/150) * 0.2 + ')';
+                            ctx.lineWidth = 1;
+                            ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                            ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+            
+            // 动画循环
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                for (let i = 0; i < particlesArray.length; i++) {
+                    particlesArray[i].update();
+                    particlesArray[i].draw();
+                }
+                
+                connect();
+                requestAnimationFrame(animate);
+            }
+            
+            init();
+            animate();
+            
+            // 卡片动画效果
+            function checkVisibility() {
+                const formSections = document.querySelectorAll('.form-section');
+                const windowHeight = window.innerHeight;
+                
+                formSections.forEach(section => {
+                    const sectionTop = section.getBoundingClientRect().top;
+                    
+                    if (sectionTop < windowHeight * 0.8) {
+                        section.classList.add('animate-in');
+                    }
+                });
+            }
+            
+            // 初始检查
+            setTimeout(checkVisibility, 100);
+            
+            // 滚动时检查
+            window.addEventListener('scroll', checkVisibility);
         });
 
-        // 创建粒子效果函数 - 仅视觉增强，不影响功能
-        function createParticles() {
-            const header = document.querySelector('.header');
-            for (let i = 0; i < 25; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.width = `${Math.random() * 5 + 1}px`;
-                particle.style.height = particle.style.width;
-                particle.style.background = 'rgba(255, 255, 255, 0.5)';
-                particle.style.borderRadius = '50%';
-                particle.style.position = 'absolute';
-                particle.style.top = `${Math.random() * 100}%`;
-                particle.style.left = `${Math.random() * 100}%`;
-                particle.style.animation = `float ${Math.random() * 10 + 5}s linear infinite`;
-                particle.style.opacity = Math.random() * 0.5;
-                particle.style.zIndex = '1';
-                
-                header.appendChild(particle);
-            }
-        }
-        
-        // 步骤切换函数 - 保持原始功能
-        function nextStep(currentStep) {
-            // 验证当前步骤的表单
-            const currentSection = document.getElementById(`section${currentStep}`);
-            const inputs = currentSection.querySelectorAll('input, select');
-            let isValid = true;
+        // 添加点击波纹效果
+        document.querySelector('.submit-btn').addEventListener('click', function(e) {
+            const rippleContainer = this.querySelector('.submit-btn-ripple');
+            const rect = this.getBoundingClientRect();
             
-            inputs.forEach(input => {
-                if (input.hasAttribute('required') && !input.value) {
-                    isValid = false;
-                    input.style.borderColor = 'var(--danger-color)';
-                } else {
-                    input.style.borderColor = '';
-                }
-            });
+            // 清除之前的波纹
+            rippleContainer.innerHTML = '';
             
-            if (!isValid) {
-                alert('请填写所有必填字段');
-                return;
-            }
+            // 创建新波纹
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple';
+            ripple.style.width = ripple.style.height = Math.max(rect.width, rect.height) * 2 + 'px';
+            ripple.style.left = e.clientX - rect.left - Math.max(rect.width, rect.height) + 'px';
+            ripple.style.top = e.clientY - rect.top - Math.max(rect.width, rect.height) + 'px';
             
-            // 隐藏当前步骤，显示下一步骤
-            document.getElementById(`section${currentStep}`).style.display = 'none';
-            document.getElementById(`section${currentStep + 1}`).style.display = 'block';
+            // 添加到容器
+            rippleContainer.appendChild(ripple);
             
-            // 更新步骤指示器
-            document.getElementById(`step${currentStep}`).classList.remove('active');
-            document.getElementById(`step${currentStep + 1}`).classList.add('active');
-            
-            // 平滑滚动到顶部
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        }
-        
-        function prevStep(currentStep) {
-            // 隐藏当前步骤，显示上一步骤
-            document.getElementById(`section${currentStep}`).style.display = 'none';
-            document.getElementById(`section${currentStep - 1}`).style.display = 'block';
-            
-            // 更新步骤指示器
-            document.getElementById(`step${currentStep}`).classList.remove('active');
-            document.getElementById(`step${currentStep - 1}`).classList.add('active');
-            
-            // 平滑滚动到顶部
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        }
-        
-        // 预测函数 - 完全保留原始功能
-        function predict() {
-            // 收集表单数据
-            const age_rank = parseInt(document.getElementById('age_rank').value);
-            const gender = parseInt(document.getElementById('gender').value);
-            const education_level = parseInt(document.getElementById('education_level').value);
-            const race = parseInt(document.getElementById('race').value);
-            const physical_labor = parseInt(document.getElementById('physical_labor').value);
-            const dairy_consumption = parseInt(document.getElementById('dairy_consumption').value);
-            const alcohol_consumption = parseInt(document.getElementById('alcohol_consumption').value);
-            const smoking_status = parseInt(document.getElementById('smoking_status').value);
-            const hearing_status = parseInt(document.getElementById('hearing_status').value);
-            const tinnitus = parseInt(document.getElementById('tinnitus').value);
-            const blood_pressure = parseInt(document.getElementById('blood_pressure').value);
-            const triglycerides = parseInt(document.getElementById('triglycerides').value);
-            const cholesterol = parseInt(document.getElementById('cholesterol').value);
-            const fasting_blood_glucose = parseInt(document.getElementById('fasting_blood_glucose').value);
-            const bmi = parseFloat(document.getElementById('bmi').value);
-            
-            // 检查所有输入是否已填写
-            if (isNaN(age_rank) || isNaN(gender) || isNaN(education_level) || isNaN(race) || 
-                isNaN(physical_labor) || isNaN(dairy_consumption) || isNaN(alcohol_consumption) || 
-                isNaN(smoking_status) || isNaN(hearing_status) || isNaN(tinnitus) || 
-                isNaN(blood_pressure) || isNaN(triglycerides) || isNaN(cholesterol) || 
-                isNaN(fasting_blood_glucose) || isNaN(bmi)) {
-                alert('请填写所有必填字段');
-                return;
-            }
-            
-            // 显示结果容器
-            document.getElementById('result-container').style.display = 'block';
-            
-            // 平滑滚动到结果部分
-            document.getElementById('result-container').scrollIntoView({
-                behavior: 'smooth'
-            });
-            
-            // 使用TensorFlow.js模型进行预测
-            // 准备输入数据 - 保持原始格式
-            const input = [
-                age_rank, gender, education_level, race, physical_labor,
-                dairy_consumption, alcohol_consumption, smoking_status,
-                hearing_status, tinnitus, blood_pressure, triglycerides,
-                cholesterol, fasting_blood_glucose, bmi
-            ];
-            
-            // 调用模型进行预测 - 保持原始调用方式
-            model.predict(tf.tensor2d([input])).array().then(predictions => {
-                const risk = predictions[0][0] * 100;
-                
-                // 更新结果显示
-                updateResultDisplay(risk);
-            });
-        }
-        
-        // 结果显示函数 - 视觉增强但保持原始信息
-        function updateResultDisplay(risk) {
-            // 保留原始格式的风险值
-            const riskValue = parseFloat(risk).toFixed(1);
-            
-            // 更新风险百分比显示
-            const riskPercentageElement = document.getElementById('risk-percentage');
-            riskPercentageElement.textContent = `${riskValue}%`;
-            
-            // 更新仪表盘视觉效果
-            const gaugeFill = document.getElementById('gauge-fill');
-            const gaugeNeedle = document.getElementById('gauge-needle');
-            const riskDescription = document.getElementById('risk-description');
-            const recommendationsList = document.getElementById('recommendations-list');
-            
-            // 设置仪表盘填充高度
-            gaugeFill.style.height = `${risk}%`;
-            
-            // 设置指针旋转角度 (-90度到90度的范围)
-            const needleRotation = -90 + (risk / 100 * 180);
-            gaugeNeedle.style.transform = `translateX(-50%) rotate(${needleRotation}deg)`;
-            
-            // 根据风险级别设置风险显示类
-            riskPercentageElement.className = 'risk-percentage';
-            riskDescription.className = 'risk-description';
-            
-            // 移除之前可能添加的类
-            riskPercentageElement.classList.remove('low', 'medium', 'high');
-            riskDescription.classList.remove('low', 'medium', 'high');
-            
-            // 根据风险范围添加相应的类
-            if (risk < 30) {
-                riskPercentageElement.classList.add('low');
-                riskDescription.classList.add('low');
-                riskDescription.textContent = '您的高频听力损失风险较低。';
-                
-                // 更新建议列表
-                recommendationsList.innerHTML = `
-                    <li>定期进行听力检查，特别是年龄增长后。</li>
-                    <li>避免长时间暴露在高分贝噪音环境中。</li>
-                    <li>使用耳机时控制音量和使用时间。</li>
-                    <li>保持健康的生活方式和饮食习惯。</li>
-                `;
-            } else if (risk < 70) {
-                riskPercentageElement.classList.add('medium');
-                riskDescription.classList.add('medium');
-                riskDescription.textContent = '您的高频听力损失风险中等。需要注意听力保护。';
-                
-                // 更新建议列表
-                recommendationsList.innerHTML = `
-                    <li>建议每年进行一次听力检查。</li>
-                    <li>在噪音环境中佩戴听力保护装置。</li>
-                    <li>限制使用耳机的时间，控制音量。</li>
-                    <li>注意控制血压和血糖水平。</li>
-                    <li>如有耳鸣症状，及时咨询专业医师。</li>
-                `;
-            } else {
-                riskPercentageElement.classList.add('high');
-                riskDescription.classList.add('high');
-                riskDescription.textContent = '您的高频听力损失风险较高。请采取积极措施保护听力并咨询专业医师。';
-                
-                // 更新建议列表
-                recommendationsList.innerHTML = `
-                    <li>尽快咨询耳鼻喉科医师进行专业听力评估。</li>
-                    <li>严格控制耳机使用和噪音暴露。</li>
-                    <li>密切监控血压、血糖和胆固醇等健康指标。</li>
-                    <li>考虑改变生活方式，如减少酒精摄入和戒烟。</li>
-                    <li>在医师指导下进行听力康复训练。</li>
-                `;
-            }
-            
-            // 添加动画效果类，使变化更平滑
-            gaugeFill.classList.add('animated');
+            // 定时移除波纹元素
             setTimeout(() => {
-                gaugeFill.classList.remove('animated');
-            }, 2000);
-        }
+                ripple.remove();
+            }, 800);
+        });
+        
+        // 为表单元素添加滚动动画效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取所有表单区块
+            const formSections = document.querySelectorAll('.form-section');
+            
+            // 添加IntersectionObserver来检测元素是否进入视口
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.transform = 'translateZ(0px) translateY(0)';
+                        entry.target.style.opacity = '1';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.2
+            });
+            
+            // 初始设置和观察
+            formSections.forEach(section => {
+                // 设置初始状态
+                section.style.opacity = '0';
+                section.style.transform = 'translateZ(-20px) translateY(20px)';
+                section.style.transition = 'all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                
+                // 开始观察
+                observer.observe(section);
+            });
+            
+            // 为下拉菜单选择添加效果
+            const selects = document.querySelectorAll('select.form-control');
+            selects.forEach(select => {
+                select.addEventListener('change', function() {
+                    this.classList.add('selected');
+                    
+                    // 添加选中后的动画效果
+                    const animation = this.animate(
+                        [
+                            { transform: 'translateY(-2px) scale(1.02)', boxShadow: '0 8px 20px rgba(74, 144, 226, 0.15)' },
+                            { transform: 'translateY(-2px)' }
+                        ], 
+                        { 
+                            duration: 500,
+                            easing: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)' 
+                        }
+                    );
+                    
+                    animation.onfinish = () => {
+                        this.style.transform = 'translateY(-2px)';
+                    };
+                });
+            });
+        });
     </script>
 </body>
-</html>	
+</html>
