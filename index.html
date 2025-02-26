@@ -708,14 +708,15 @@
             }
         }
 
-        /* 风险仪表盘3D效果 */
+        /* 高科技风险仪表盘 */
         .risk-meter-container {
             position: relative;
-            width: 320px;
-            height: 320px;
+            width: 400px;
+            height: 400px;
             margin: 40px auto;
             transform-style: preserve-3d;
-            animation: float-meter 6s ease-in-out infinite;
+            animation: float-meter 8s ease-in-out infinite;
+            position: relative;
         }
 
         @keyframes float-meter {
@@ -727,214 +728,483 @@
             }
         }
 
+        /* 仪表盘背景 */
         .risk-meter {
-            width: 250px;
-            height: 250px;
-            margin: 30px auto;
+            width: 350px;
+            height: 350px;
+            margin: 0 auto;
             position: relative;
-            background: white;
-            border-radius: 50%;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08),
-                        0 30px 60px rgba(0, 0, 0, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
             flex-direction: column;
-            transition: var(--transition);
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-            z-index: 2;
             transform-style: preserve-3d;
             transform: translateZ(20px);
-        }
-
-        /* 推荐卡片3D效果 */
-        .recommendation-item {
-            background: white;
-            padding: 25px;
-            border-radius: var(--border-radius);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid rgba(74, 144, 226, 0.05);
-            position: relative;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1a1f35 0%, #131b2e 100%);
+            box-shadow: 0 0 60px rgba(74, 144, 226, 0.15),
+                        inset 0 0 40px rgba(0, 0, 10, 0.8);
             overflow: hidden;
-            transform-style: preserve-3d;
-            perspective: 1000px;
         }
 
-        .recommendation-item:hover {
-            transform: translateY(-8px) rotateY(2deg);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-        }
-
-        .recommendation-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            position: relative;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transform-style: preserve-3d;
-            transform: translateZ(10px);
-        }
-
-        .recommendation-item:hover .recommendation-icon {
-            transform: scale(1.1) rotate(-5deg) translateZ(20px);
-        }
-
-        .recommendation-icon::before {
+        /* 添加仪表盘内部装饰元素 */
+        .risk-meter::before {
             content: '';
             position: absolute;
-            inset: -3px;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            border-radius: 15px;
-            z-index: -1;
-            opacity: 0.3;
-            filter: blur(3px);
+            width: 330px;
+            height: 330px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1e2338 0%, #191e2e 100%);
+            z-index: 1;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
         }
 
-        .recommendation-icon i {
-            color: white;
-            font-size: 28px;
+        /* 六边形装饰 */
+        .risk-meter::after {
+            content: '';
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpolygon points='50,0 93.3,25 93.3,75 50,100 6.7,75 6.7,25' fill='none' stroke='rgba(74, 144, 226, 0.15)' stroke-width='1'/%3E%3C/svg%3E");
+            background-size: 280px;
+            background-repeat: no-repeat;
+            background-position: center;
+            z-index: 2;
+            animation: rotate-slow 20s linear infinite;
+            opacity: 0.6;
         }
 
-        .recommendation-title {
+        @keyframes rotate-slow {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* 仪表盘刻度环 */
+        .gauge-rings {
+            position: absolute;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 3;
+        }
+
+        .gauge-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+
+        /* 外环 */
+        .gauge-ring:nth-child(1) {
+            border: 2px solid rgba(74, 144, 226, 0.2);
+            box-shadow: 0 0 20px rgba(74, 144, 226, 0.1), 
+                        inset 0 0 20px rgba(74, 144, 226, 0.1);
+            animation: pulse-ring 4s infinite alternate;
+        }
+
+        /* 中环 */
+        .gauge-ring:nth-child(2) {
+            width: 280px;
+            height: 280px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid rgba(74, 144, 226, 0.3);
+        }
+
+        /* 内环 */
+        .gauge-ring:nth-child(3) {
+            width: 220px;
+            height: 220px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid rgba(74, 144, 226, 0.4);
+        }
+
+        /* 刻度标记 */
+        .gauge-ticks {
+            position: absolute;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 4;
+        }
+
+        .gauge-tick {
+            position: absolute;
+            width: 3px;
+            height: 10px;
+            background: rgba(74, 144, 226, 0.6);
+            transform-origin: center 160px;
+            left: calc(50% - 1.5px);
+            top: 0;
+        }
+
+        /* 生成20个刻度 */
+        .gauge-tick:nth-child(1) { transform: rotate(0deg); }
+        .gauge-tick:nth-child(2) { transform: rotate(18deg); }
+        .gauge-tick:nth-child(3) { transform: rotate(36deg); height: 15px; background: rgba(74, 144, 226, 0.8); }
+        .gauge-tick:nth-child(4) { transform: rotate(54deg); }
+        .gauge-tick:nth-child(5) { transform: rotate(72deg); }
+        .gauge-tick:nth-child(6) { transform: rotate(90deg); height: 15px; background: rgba(255, 184, 0, 0.8); }
+        .gauge-tick:nth-child(7) { transform: rotate(108deg); }
+        .gauge-tick:nth-child(8) { transform: rotate(126deg); }
+        .gauge-tick:nth-child(9) { transform: rotate(144deg); height: 15px; background: rgba(231, 76, 60, 0.8); }
+        .gauge-tick:nth-child(10) { transform: rotate(162deg); }
+        .gauge-tick:nth-child(11) { transform: rotate(180deg); }
+        .gauge-tick:nth-child(12) { transform: rotate(198deg); }
+        .gauge-tick:nth-child(13) { transform: rotate(216deg); }
+        .gauge-tick:nth-child(14) { transform: rotate(234deg); }
+        .gauge-tick:nth-child(15) { transform: rotate(252deg); }
+        .gauge-tick:nth-child(16) { transform: rotate(270deg); }
+        .gauge-tick:nth-child(17) { transform: rotate(288deg); }
+        .gauge-tick:nth-child(18) { transform: rotate(306deg); }
+        .gauge-tick:nth-child(19) { transform: rotate(324deg); }
+        .gauge-tick:nth-child(20) { transform: rotate(342deg); }
+
+        /* 风险区域 */
+        .risk-zones {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 4;
+            overflow: hidden;
+        }
+
+        .risk-zone {
+            position: absolute;
+            width: 300px;
+            height: 150px;
+            top: 0;
+            left: 0;
+            border-radius: 300px 300px 0 0;
+            background: conic-gradient(
+                rgba(74, 144, 226, 0.3) 0%,
+                rgba(255, 184, 0, 0.3) 40%,
+                rgba(231, 76, 60, 0.3) 70%,
+                rgba(231, 76, 60, 0.3) 100%
+            );
+            transform-origin: bottom center;
+            transform: rotate(-180deg);
+        }
+
+        /* 指针 */
+        .gauge-needle-container {
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) rotate(-90deg);
+            z-index: 5;
+            transition: transform 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .gauge-needle {
+            position: absolute;
+            width: 110px;
+            height: 4px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.9), #4A90E2);
+            top: 50%;
+            right: 50%;
+            transform: translateY(-50%);
+            transform-origin: right center;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(74, 144, 226, 0.8);
+        }
+
+        .gauge-needle::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #4A90E2;
+            right: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 0 15px rgba(74, 144, 226, 0.8),
+                        inset 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        .gauge-needle::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: white;
+            right: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+
+        /* 中心数值显示 */
+        .risk-percentage {
+            font-size: 42px;
+            font-weight: 700;
+            color: #ffffff;
+            z-index: 10;
+            text-shadow: 0 0 10px rgba(74, 144, 226, 0.8);
+            position: relative;
+            animation: pulse-text 2s infinite alternate;
+        }
+
+        @keyframes pulse-text {
+            0% { text-shadow: 0 0 10px rgba(74, 144, 226, 0.5); }
+            100% { text-shadow: 0 0 20px rgba(74, 144, 226, 0.9); }
+        }
+
+        .risk-label {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            z-index: 10;
+        }
+
+        /* 添加数字刻度标签 */
+        .gauge-labels {
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+        }
+
+        .gauge-label {
+            position: absolute;
+            font-size: 12px;
             font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 12px;
-            font-size: 18px;
+            color: rgba(255, 255, 255, 0.7);
         }
 
-        .recommendation-desc {
-            color: var(--text-secondary);
-            line-height: 1.7;
-            font-size: 15px;
-        }
-		        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .gauge-label:nth-child(1) {
+            top: 15%;
+            left: 25%;
+            color: rgba(74, 144, 226, 0.9);
         }
 
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
+        .gauge-label:nth-child(2) {
+            top: 15%;
+            right: 25%;
+            color: rgba(231, 76, 60, 0.9);
         }
 
-        @keyframes countUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .gauge-label:nth-child(3) {
+            bottom: 30%;
+            left: 10%;
+            color: rgba(255, 184, 0, 0.9);
         }
 
-        /* 响应式调整 */
-        @media (max-width: 992px) {
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .progress-indicator {
-                flex-direction: column;
-                align-items: flex-start;
-                padding: 20px 15px;
-            }
-            
-            /* 修改响应式下的箭头为垂直方向 */
-            .progress-step:not(:last-child)::after {
-                content: '';
-                position: absolute;
-                width: 20px;
-                height: 20px;
-                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='5' x2='12' y2='19'%3E%3C/line%3E%3Cpolyline points='19 12 12 19 5 12'%3E%3C/polyline%3E%3C/svg%3E");
-                background-size: contain;
-                background-repeat: no-repeat;
-                top: 100%;
-                left: 15px;
-                right: auto;
-                transform: translateY(10px);
-                z-index: 1;
-            }
-            
-            .progress-step {
-                margin: 15px 0;
-            }
-            
-            .form-section {
-                margin: 0 20px 30px;
-                padding: 30px 20px;
-            }
-            
-            .header {
-                padding: 40px 20px 30px;
-            }
-            
-            .header h1 {
-                font-size: 28px;
-            }
-            
-            .result-container {
-                margin: 0 20px 30px;
-                padding: 30px 20px;
-            }
-            
+        .gauge-label:nth-child(4) {
+            bottom: 30%;
+            right: 10%;
+            color: rgba(255, 184, 0, 0.9);
+        }
+
+        /* 技术感扫描线 */
+        .scan-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(74, 144, 226, 0.1) 20%, 
+                rgba(74, 144, 226, 0.3) 50%,
+                rgba(74, 144, 226, 0.1) 80%,
+                transparent 100%);
+            animation: scan 3s linear infinite;
+            z-index: 5;
+            opacity: 0.7;
+        }
+
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+
+        /* 添加数据点效果 */
+        .data-points {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 3;
+        }
+
+        .data-point {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: rgba(74, 144, 226, 0.8);
+            animation: blink 3s infinite alternate;
+        }
+
+        @keyframes blink {
+            0%, 80% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0.3; transform: scale(0.8); }
+        }
+
+        /* 随机分布20个数据点 */
+        .data-point:nth-child(1) { left: 20%; top: 30%; animation-delay: 0.1s; }
+        .data-point:nth-child(2) { left: 70%; top: 20%; animation-delay: 0.3s; }
+        .data-point:nth-child(3) { left: 50%; top: 80%; animation-delay: 0.5s; }
+        .data-point:nth-child(4) { left: 80%; top: 60%; animation-delay: 0.7s; }
+        .data-point:nth-child(5) { left: 30%; top: 70%; animation-delay: 0.9s; }
+        .data-point:nth-child(6) { left: 40%; top: 40%; animation-delay: 1.1s; }
+        .data-point:nth-child(7) { left: 60%; top: 30%; animation-delay: 1.3s; }
+        .data-point:nth-child(8) { left: 75%; top: 45%; animation-delay: 1.5s; }
+        .data-point:nth-child(9) { left: 25%; top: 55%; animation-delay: 1.7s; }
+        .data-point:nth-child(10) { left: 85%; top: 75%; animation-delay: 1.9s; }
+        .data-point:nth-child(11) { left: 15%; top: 40%; animation-delay: 2.1s; }
+        .data-point:nth-child(12) { left: 45%; top: 25%; animation-delay: 2.3s; }
+
+        /* 数字化信息显示 */
+        .digital-displays {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 6;
+            pointer-events: none;
+        }
+
+        .digital-display {
+            position: absolute;
+            font-family: 'Consolas', monospace;
+            font-size: 10px;
+            color: rgba(74, 144, 226, 0.8);
+            background: rgba(0, 10, 30, 0.5);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid rgba(74, 144, 226, 0.3);
+            animation: fade-in-out 5s infinite alternate;
+        }
+
+        @keyframes fade-in-out {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.9; }
+        }
+
+        .digital-display:nth-child(1) {
+            top: 30%;
+            left: 15%;
+            animation-delay: 0.5s;
+        }
+
+        .digital-display:nth-child(2) {
+            top: 65%;
+            right: 18%;
+            animation-delay: 1.5s;
+        }
+
+        .digital-display:nth-child(3) {
+            bottom: 20%;
+            left: 22%;
+            animation-delay: 2.5s;
+        }
+
+        /* 优化响应式调整 */
+        @media (max-width: 768px) {
             .risk-meter-container {
+                width: 320px;
+                height: 320px;
+            }
+            
+            .risk-meter {
                 width: 280px;
                 height: 280px;
             }
             
-            .risk-meter {
+            .gauge-rings {
+                width: 260px;
+                height: 260px;
+            }
+            
+            .gauge-ring:nth-child(2) {
                 width: 220px;
                 height: 220px;
             }
             
-            .risk-gauge {
-                width: 280px;
-                height: 280px;
+            .gauge-ring:nth-child(3) {
+                width: 180px;
+                height: 180px;
+            }
+            
+            .gauge-ticks {
+                width: 260px;
+                height: 260px;
+            }
+            
+            .gauge-needle-container {
+                width: 180px;
+                height: 180px;
+            }
+            
+            .gauge-needle {
+                width: 90px;
+            }
+            
+            .risk-percentage {
+                font-size: 34px;
+            }
+            
+            .risk-label {
+                font-size: 14px;
+            }
+            
+            .digital-display {
+                font-size: 8px;
             }
         }
 
-        @media (max-width: 576px) {
-            .container {
-                margin: 20px auto;
+        @media (max-width: 480px) {
+            .risk-meter-container {
+                width: 260px;
+                height: 260px;
             }
             
-            .header-icon-container {
-                width: 90px;
-                height: 90px;
+            .risk-meter {
+                width: 230px;
+                height: 230px;
             }
             
-            .header-icon {
-                font-size: 40px;
+            .risk-percentage {
+                font-size: 30px;
             }
             
-            .submit-btn {
-                min-width: auto;
-                width: 100%;
+            .gauge-rings {
+                width: 210px;
+                height: 210px;
             }
             
-            .actions {
-                flex-direction: column;
-            }
-            
-            .action-btn {
-                width: 100%;
+            .gauge-needle {
+                width: 70px;
             }
         }
     </style>
@@ -1285,21 +1555,83 @@
             <!-- 风险仪表盘 -->
             <div class="risk-meter-container">
                 <div class="risk-meter">
+                    <!-- 扫描线效果 -->
+                    <div class="scan-line"></div>
+                    
+                    <!-- 仪表盘环 -->
+                    <div class="gauge-rings">
+                        <div class="gauge-ring"></div>
+                        <div class="gauge-ring"></div>
+                        <div class="gauge-ring"></div>
+                    </div>
+                    
+                    <!-- 仪表盘刻度 -->
+                    <div class="gauge-ticks">
+                        <div class="gauge-tick"></div>
+                        <div class="gauge-tick"></div>
+                        <div class="gauge-tick"></div>
+                        <div class="gauge-tick"></div>
+                        <div class="gauge-tick"></div>
+                        <div class="gauge-tick"></div>
+                        <div class="gauge-tick"></div>
+                        <div class="gauge-tick"></div>
+                        <div class="gauge-tick"></div>
+                        <div class="gauge-tick"></div>
+                        <div class="gauge-tick"></div>
+                        <div class="gauge-tick"></div>
+                        <div class="gauge-tick"></div>
+                        <div class="gauge-tick"></div>
+                        <div class="gauge-tick"></div>
+                        <div class="gauge-tick"></div>
+                        <div class="gauge-tick"></div>
+                        <div class="gauge-tick"></div>
+                        <div class="gauge-tick"></div>
+                    </div>
+                    
+                    <!-- 风险区域 -->
+                    <div class="risk-zones">
+                        <div class="risk-zone"></div>
+                    </div>
+                    
+                    <!-- 指针 -->
+                    <div id="gauge-needle-container" class="gauge-needle-container">
+                        <div class="gauge-needle"></div>
+                    </div>
+                    
+                    <!-- 数据点 -->
+                    <div class="data-points">
+                        <div class="data-point"></div>
+                        <div class="data-point"></div>
+                        <div class="data-point"></div>
+                        <div class="data-point"></div>
+                        <div class="data-point"></div>
+                        <div class="data-point"></div>
+                        <div class="data-point"></div>
+                        <div class="data-point"></div>
+                        <div class="data-point"></div>
+                        <div class="data-point"></div>
+                        <div class="data-point"></div>
+                        <div class="data-point"></div>
+                    </div>
+                    
+                    <!-- 刻度标签 -->
+                    <div class="gauge-labels">
+                        <div class="gauge-label">LOW</div>
+                        <div class="gauge-label">HIGH</div>
+                        <div class="gauge-label">MID</div>
+                        <div class="gauge-label">MID</div>
+                    </div>
+                    
+                    <!-- 数字化信息显示 -->
+                    <div class="digital-displays">
+                        <div class="digital-display">RISK:ANALYZING</div>
+                        <div class="digital-display">CONF:87.3%</div>
+                        <div class="digital-display">SYS:OPTIMAL</div>
+                    </div>
+                    
+                    <!-- 中心显示 -->
                     <div class="risk-percentage" id="risk-value">--</div>
                     <div class="risk-label">Risk Level</div>
-                </div>
-                <div class="risk-gauge">
-                    <div class="gauge-ring"></div>
-                    <div class="gauge-marks">
-                        <div class="gauge-mark"></div>
-                        <div class="gauge-mark"></div>
-                        <div class="gauge-mark"></div>
-                        <div class="gauge-mark"></div>
-                        <div class="gauge-mark"></div>
-                        <div class="gauge-mark"></div>
-                        <div class="gauge-mark"></div>
-                    </div>
-                    <div class="gauge-needle"></div>
                 </div>
             </div>
 
@@ -1591,6 +1923,46 @@
                 });
             });
         });
+
+        // 修改风险指针动画和预测函数
+        function predict() {
+            // 此处应该是您的预测逻辑，这里只是模拟
+            
+            // 显示结果容器
+            document.getElementById('result').classList.add('show');
+            
+            // 模拟计算风险值 (这里只是一个随机值作为示例)
+            // 实际应用中应替换为真实的预测结果
+            setTimeout(function() {
+                // 随机生成一个风险值(0-100)
+                const riskValue = Math.floor(Math.random() * 100) + 1;
+                
+                // 设置风险值显示
+                document.getElementById('risk-value').innerText = riskValue + '%';
+                document.getElementById('risk-percentage').innerText = riskValue + '%';
+                
+                // 根据风险值旋转指针
+                // 0% 风险对应 -90度，100% 风险对应 90度，所以需要映射风险值到这个范围
+                const needleRotation = -90 + (riskValue / 100 * 180);
+                document.getElementById('gauge-needle-container').style.transform = 
+                    `translate(-50%, -50%) rotate(${needleRotation}deg)`;
+                
+                // 根据风险值设置颜色
+                let riskColor = '#4A90E2'; // 低风险 - 蓝色
+                if (riskValue > 70) {
+                    riskColor = '#E74C3C'; // 高风险 - 红色
+                } else if (riskValue > 30) {
+                    riskColor = '#F7B733'; // 中风险 - 黄色
+                }
+                
+                // 设置风险值颜色
+                document.getElementById('risk-value').style.color = riskColor;
+                document.getElementById('risk-value').style.textShadow = `0 0 10px ${riskColor}`;
+                
+                // 滚动到结果区域
+                document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+            }, 1500); // 延迟1.5秒显示结果，模拟计算过程
+        }
     </script>
 </body>
 </html>
