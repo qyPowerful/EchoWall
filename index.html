@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>High-Frequency Hearing Loss Prediction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --primary-light: #5dade2;
+            --primary-dark: #2874a6;
+            --secondary-color: #2ecc71;
+            --accent-color: #f39c12;
+            --danger-color: #e74c3c;
+            --success-color: #27ae60;
+            --text-primary: #2C3E50;
+            --text-secondary: #7F8C8D;
+            --background-primary: #f8fafc;
+            --border-radius: 16px;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', 'Poppins', sans-serif;
+            background-color: var(--background-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            position: relative;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* 医疗科技主题背景 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(74, 144, 226, 0.05) 0%, rgba(148, 202, 250, 0.05) 100%),
+                radial-gradient(circle at 90% 80%, rgba(74, 144, 226, 0.08) 0%, rgba(148, 202, 250, 0) 100%);
+            z-index: -2;
+        }
+
+        /* 科技感网格背景 */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath fill='%234a90e2' fill-opacity='0.05' d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5z'%3E%3C/path%3E%3C/svg%3E");
+            opacity: 0.5;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 24px;
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* 耳朵图标装饰 */
+        .ear-icon-decoration {
+            position: absolute;
+            top: -80px;
+            left: -80px;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(74, 144, 226, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+            z-index: -1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .ear-icon-decoration::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-30%, -30%);
+            width: 60px;
+            height: 60px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9'/%3E%3Cpath d='M10.3 21a1.94 1.94 0 0 0 3.4 0'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0.4;
+        }
+
+        /* 大脑图标装饰 */
+        .brain-icon-decoration {
+            position: absolute;
+            top: 40px;
+            right: -80px;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(74, 144, 226, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+            z-index: -1;
+            animation: float 6s ease-in-out infinite reverse;
+        }
+
+        .brain-icon-decoration::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-70%, -50%);
+            width: 60px;
+            height: 60px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44'/%3E%3Cpath d='M5.5 2A2.5 2.5 0 0 0 3 4.5v15a2.5 2.5 0 0 0 5 0'/%3E%3Cpath d='M14.5 4A2.5 2.5 0 0 0 12 6.5'/%3E%3Cpath d='M18.5 4A2.5 2.5 0 0 1 21 6.5v10a2.5 2.5 0 0 1-4.96.44'/%3E%3Cpath d='M14.5 22A2.5 2.5 0 0 0 17 19.5'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0.4;
+        }
+		/* 浮动动画 */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+/* 标题区域 */
+.header {
+    position: relative;
+    padding: 40px;
+    background: linear-gradient(135deg, #4a90e2, #2874a6);
+    color: white;
+    text-align: center;
+    overflow: hidden;
+}
+
+/* 声波动画 */
+.sound-wave {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    overflow: hidden;
+}
+
+.sound-wave::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.2' d='M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+    background-size: 1440px 120px;
+    animation: wave 15s linear infinite;
+    opacity: 0.4;
+}
+
+.sound-wave::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.3' d='M0,64L48,80C96,96,192,128,288,149.3C384,171,480,181,576,176C672,171,768,149,864,128C960,107,1056,85,1152,96C1248,107,1344,149,1392,170.7L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+    background-size: 1440px 120px;
+    animation: wave 12s linear infinite reverse;
+    opacity: 0.3;
+}
+
+@keyframes wave {
+    0% { background-position-x: 0; }
+    100% { background-position-x: 1440px; }
+}
+
+/* 脉冲环装饰 */
+.pulse-ring {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%) scale(0);
+    animation: pulse 3s ease-out infinite;
+}
+
+.pulse-ring:nth-child(1) {
+    top: 30%;
+    left: 25%;
+    width: 150px;
+    height: 150px;
+    animation-delay: 0s;
+}
+
+.pulse-ring:nth-child(2) {
+    top: 70%;
+    left: 80%;
+    width: 120px;
+    height: 120px;
+    animation-delay: 1s;
+}
+
+.pulse-ring:nth-child(3) {
+    top: 40%;
+    left: 65%;
+    width: 180px;
+    height: 180px;
+    animation-delay: 2s;
+}
+
+@keyframes pulse {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 0.8; }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+}
+
+/* 标题图标容器 */
+.header-icon-container {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.header-icon {
+    width: 70px;
+    height: 70px;
+    margin: 0 15px;
+    position: relative;
+}
+
+.header-icon::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.ear-icon::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9'/%3E%3Cpath d='M10.3 21a1.94 1.94 0 0 0 3.4 0'/%3E%3C/svg%3E");
+    animation: wiggle 3s ease-in-out infinite;
+}
+
+.brain-icon::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44'/%3E%3Cpath d='M5.5 2A2.5 2.5 0 0 0 3 4.5v15a2.5 2.5 0 0 0 5 0'/%3E%3Cpath d='M14.5 4A2.5 2.5 0 0 0 12 6.5'/%3E%3Cpath d='M18.5 4A2.5 2.5 0 0 1 21 6.5v10a2.5 2.5 0 0 1-4.96.44'/%3E%3Cpath d='M14.5 22A2.5 2.5 0 0 0 17 19.5'/%3E%3C/svg%3E");
+    animation: pulse-glow 3s ease-in-out infinite;
+}
+
+@keyframes wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-5deg); }
+    75% { transform: rotate(5deg); }
+}
+
+@keyframes pulse-glow {
+    0%, 100% { filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7)); }
+    50% { filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.9)); }
+}
+
+/* 标题文字 */
+.header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    font-weight: 700;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.header p {
+    font-size: 1.1rem;
+    max-width: 700px;
+    margin: 0 auto 20px;
+    opacity: 0.9;
+}
+
+/* 进度指示器 */
+.progress-indicator {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    position: relative;
+    z-index: 1;
+}
+
+.step {
+    flex: 1;
+    text-align: center;
+    position: relative;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px;
+    font-weight: 700;
+    position: relative;
+    z-index: 2;
+    transition: var(--transition);
+}
+
+.step.active .step-number {
+    background-color: var(--accent-color);
+    box-shadow: 0 0 15px rgba(243, 156, 18, 0.5);
+}
+
+.step-title {
+    font-size: 0.9rem;
+    color: white;
+    opacity: 0.8;
+    transition: var(--transition);
+}
+
+.step.active .step-title {
+    opacity: 1;
+    font-weight: 600;
+}
+
+/* 步骤箭头连接，替换原来的虚线 */
+.step-connection {
+    position: absolute;
+    top: 20px;
+    right: 50%;
+    height: 3px;
+    width: 80%;
+    background: rgba(255, 255, 255, 0.2);
+    z-index: 1;
+}
+
+.step-connection::after {
+    content: '';
+    position: absolute;
+    top: -8px;
+    right: -2px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 10px 0 10px 15px;
+    border-color: transparent transparent transparent rgba(255, 255, 255, 0.2);
+    animation: arrow-pulse 2s infinite;
+}
+
+.step:last-child .step-connection {
+    display: none;
+}
+
+@keyframes arrow-pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+/* 表单部分样式 */
+.form-section {
+    padding: 30px 40px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: var(--transition);
+}
+
+.form-section:hover {
+    background-color: rgba(74, 144, 226, 0.03);
+    box-shadow: inset 0 0 20px rgba(74, 144, 226, 0.02);
+}
+
+.form-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 25px;
+    color: var(--primary-dark);
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.form-section h2::before {
+    content: '';
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.7;
+}
+
+.form-section.basic h2::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E");
+}
+
+.form-section.lifestyle h2::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 8h1a4 4 0 0 1 0 8h-1'/%3E%3Cpath d='M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z'/%3E%3Cline x1='6' y1='1' x2='6' y2='4'/%3E%3Cline x1='10' y1='1' x2='10' y2='4'/%3E%3Cline x1='14' y1='1' x2='14' y2='4'/%3E%3C/svg%3E");
+}
+
+.form-section.medical h2::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 12h-4l-3 9L9 3l-3 9H2'/%3E%3C/svg%3E");
+}
+
+.form-section.clinical h2::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='4' y='4' width='16' height='16' rx='2' ry='2'/%3E%3Cline x1='12' y1='4' x2='12' y2='20'/%3E%3Cline x1='4' y1='12' x2='20' y2='12'/%3E%3C/svg%3E");
+}
+
+/* 表单组样式 */
+.form-group {
+    margin-bottom: 20px;
+    border-radius: 10px;
+    padding: 8px;
+    transition: var(--transition);
+}
+
+.form-group:hover {
+    background-color: rgba(74, 144, 226, 0.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+    transform: translateY(-2px);
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-primary);
+    padding-left: 30px;
+    position: relative;
+}
+
+/* 表单标签图标 */
+label[for]::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 22px;
+    height: 22px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.7;
+}
+
+/* 为每个标签添加对应的图标 */
+label[for="age_rank"]::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z'/%3E%3C/svg%3E");
+}
+
+label[for="gender"]::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='5' r='3'/%3E%3Cline x1='12' y1='8' x2='12' y2='21'/%3E%3Cline x1='8' y1='16' x2='16' y2='16'/%3E%3C/svg%3E");
+}
+
+label[for="education_level"]::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z'/%3E%3Cpath d='M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z'/%3E%3C/svg%3E");
+}
+
+label[for="race"]::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='9' cy='7' r='4'/%3E%3Cpath d='M23 21v-2a4 4 0 0 0-3-3.87'/%3E%3Cpath d='M16 3.13a4 4 0 0 1 0 7.75'/%3E%3C/svg%3E");
+}
+
+label[for="physical_labor"]::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 18a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2'/%3E%3Crect x='3' y='4' width='18' height='18' rx='2'/%3E%3Ccircle cx='9' cy='10' r='2'/%3E%3Cpath d='M15 8h.01'/%3E%3Cpath d='M15 12h.01'/%3E%3C/svg%3E");
+}
+
+label[for="dairy_consumption"]::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z'/%3E%3Cline x1='3' y1='6' x2='21' y2='6'/%3E%3Cpath d='M16 10a4 4 0 0 1-8 0'/%3E%3C/svg%3E");
+}
+label[for="alcohol_consumption"]::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 21h8'/%3E%3Cpath d='M12 21v-4'/%3E%3Cpath d='M16 4l3 7H5l3-7'/%3E%3Cpath d='M17.5 11l.5 9'/%3E%3Cpath d='M6.5 11l-.5 9'/%3E%3Cpath d='M5 11h14'/%3E%3C/svg%3E");
+}
+
+label[for="smoking_status"]::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 12H2v4h16'/%3E%3Cpath d='M22 12v4'/%3E%3Cpath d='M7 12v4'/%3E%3Cpath d='M18 8c0-2.5-2-2.5-2-5'/%3E%3Cpath d='M22 8c0-2.5-2-2.5-2-5'/%3E%3C/svg%3E");
+}
+
+label[for="hearing_status"]::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9'/%3E%3Cpath d='M10.3 21a1.94 1.94 0 0 0 3.4 0'/%3E%3C/svg%3E");
+}
+
+label[for="tinnitus"]::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 2L2 22'/%3E%3Cpath d='M9.9 5.1C9 5.8 8.2 6.6 7.5 7.5'/%3E%3Cpath d='M14.5 17.5c-.9.8-1.9 1.5-3 2'/%3E%3Cpath d='M5.1 9.9c-1.2 2.2-1.4 4.8-.7 7.2'/%3E%3Cpath d='M16.5 14.5c1.2-2.3 1.4-5 .5-7.5'/%3E%3C/svg%3E");
+}
+
+label[for="blood_pressure"]::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 12h20'/%3E%3Cpath d='M2 12a10 10 0 0 1 20 0'/%3E%3Cpath d='M2 12a10 10 0 0 0 20 0'/%3E%3C/svg%3E");
+}
+
+label[for="triglycerides"]::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14.5 2v16.5c0 2.5-2 4.5-4.5 4.5s-4.5-2-4.5-4.5V10H3v8.5C3 21.5 7 23 12 23s9-1.5 9-4.5V2'/%3E%3C/svg%3E");
+}
+
+label[for="cholesterol"]::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8.56 2.9A7 7 0 0 0 19 9v4m-9.34 6.28A7 7 0 0 1 5 13V9a7 7 0 0 1 .28-2'/%3E%3Cpath d='M12 19v3'/%3E%3Cpath d='M12 13v-3'/%3E%3Cline x1='3' y1='15' x2='9' y2='15'/%3E%3Cline x1='15' y1='15' x2='21' y2='15'/%3E%3C/svg%3E");
+}
+
+label[for="fasting_blood_glucose"]::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2v6'/%3E%3Cpath d='M17.5 7.5l-1.5 1.5'/%3E%3Cpath d='M22 12h-6'/%3E%3Cpath d='M17.5 16.5l-1.5-1.5'/%3E%3Cpath d='M12 22v-6'/%3E%3Cpath d='M6.5 16.5l1.5-1.5'/%3E%3Cpath d='M2 12h6'/%3E%3Cpath d='M6.5 7.5l1.5 1.5'/%3E%3C/svg%3E");
+}
+
+label[for="bmi"]::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='3' width='20' height='18' rx='2'/%3E%3Cline x1='8' y1='7' x2='16' y2='7'/%3E%3Cline x1='8' y1='12' x2='16' y2='12'/%3E%3Cline x1='8' y1='17' x2='16' y2='17'/%3E%3C/svg%3E");
+}
+
+/* 表单控件样式 */
+.form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: var(--transition);
+    background-color: #fff;
+    color: var(--text-primary);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.form-control:hover {
+    border-color: var(--primary-light);
+}
+
+/* 表单提示 */
+.form-hint {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+/* 提交按钮容器 */
+.submit-btn-container {
+    padding: 30px 40px;
+    text-align: center;
+}
+
+/* 提交按钮 */
+.submit-btn {
+    padding: 14px 40px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(52, 152, 219, 0.2);
+}
+
+.submit-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 25px rgba(52, 152, 219, 0.3);
+}
+
+.submit-btn:active {
+    transform: translateY(-1px);
+}
+
+/* 按钮内部闪光效果 */
+.submit-btn::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+    transform: rotate(30deg);
+    transition: var(--transition);
+    opacity: 0;
+}
+
+.submit-btn:hover::after {
+    opacity: 1;
+    transform: rotate(30deg) translate(10%, -10%);
+}
+/* 结果容器 */
+.result-container {
+    padding: 40px;
+    display: none;
+    border-top: 5px solid var(--primary-color);
+    position: relative;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(240, 248, 255, 0.9));
+}
+
+/* 结果容器背景装饰 */
+.result-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5z' fill='%234a90e2' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+    z-index: -1;
+}
+
+.result-title {
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+    color: var(--primary-dark);
+    text-align: center;
+    font-weight: 700;
+}
+
+/* 风险仪表盘容器 */
+.risk-meter-container {
+    margin: 30px auto;
+    max-width: 300px;
+    position: relative;
+}
+
+/* 风险仪表盘 */
+.risk-meter {
+    width: 100%;
+    height: 150px;
+    background: #f8f9fa;
+    border-radius: 150px 150px 0 0;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* 仪表刻度线 */
+.gauge-mark {
+    position: absolute;
+    bottom: 0;
+    width: 2px;
+    height: 10px;
+    background-color: rgba(0, 0, 0, 0.2);
+    transform-origin: center bottom;
+}
+
+/* 生成10个均匀分布的刻度线 */
+.gauge-mark:nth-child(1) { left: 10%; transform: rotate(-72deg); }
+.gauge-mark:nth-child(2) { left: 20%; transform: rotate(-54deg); }
+.gauge-mark:nth-child(3) { left: 30%; transform: rotate(-36deg); }
+.gauge-mark:nth-child(4) { left: 40%; transform: rotate(-18deg); }
+.gauge-mark:nth-child(5) { left: 50%; transform: rotate(0deg); }
+.gauge-mark:nth-child(6) { left: 60%; transform: rotate(18deg); }
+.gauge-mark:nth-child(7) { left: 70%; transform: rotate(36deg); }
+.gauge-mark:nth-child(8) { left: 80%; transform: rotate(54deg); }
+.gauge-mark:nth-child(9) { left: 90%; transform: rotate(72deg); }
+
+/* 仪表填充效果 */
+.gauge-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0%;
+    background: linear-gradient(to top, var(--danger-color), var(--accent-color), var(--secondary-color));
+    border-radius: 150px 150px 0 0;
+    transform-origin: center bottom;
+    transition: height 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    opacity: 0.7;
+}
+
+/* 仪表指针 */
+.gauge-needle {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 4px;
+    height: 120px;
+    background-color: #e74c3c;
+    transform-origin: center bottom;
+    transform: translateX(-50%) rotate(0deg);
+    transition: transform 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 3;
+    box-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+}
+
+.gauge-needle::before {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 15px;
+    height: 15px;
+    background-color: #e74c3c;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+}
+
+/* 风险百分比显示 */
+.risk-percentage {
+    position: absolute;
+    bottom: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--danger-color);
+    text-align: center;
+    width: 100%;
+    transition: color 0.5s;
+    text-shadow: 0 2px 10px rgba(231, 76, 60, 0.2);
+}
+
+/* 根据风险程度变化颜色 */
+.risk-percentage.low {
+    color: var(--secondary-color);
+    text-shadow: 0 2px 10px rgba(46, 204, 113, 0.2);
+}
+
+.risk-percentage.medium {
+    color: var(--accent-color);
+    text-shadow: 0 2px 10px rgba(243, 156, 18, 0.2);
+}
+
+.risk-percentage.high {
+    color: var(--danger-color);
+    text-shadow: 0 2px 10px rgba(231, 76, 60, 0.2);
+}
+
+/* 风险描述 */
+.risk-description {
+    text-align: center;
+    margin-top: 70px;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    padding: 15px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.5);
+    transition: background-color 0.5s;
+}
+
+/* 风险描述根据程度变化背景 */
+.risk-description.low {
+    background-color: rgba(46, 204, 113, 0.1);
+    border-left: 4px solid var(--secondary-color);
+}
+
+.risk-description.medium {
+    background-color: rgba(243, 156, 18, 0.1);
+    border-left: 4px solid var(--accent-color);
+}
+
+.risk-description.high {
+    background-color: rgba(231, 76, 60, 0.1);
+    border-left: 4px solid var(--danger-color);
+}
+
+/* 建议部分 */
+.recommendations {
+    margin-top: 40px;
+    padding: 25px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+}
+
+.recommendations h3 {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    color: var(--primary-dark);
+    border-bottom: 2px solid rgba(74, 144, 226, 0.2);
+    padding-bottom: 10px;
+}
+
+.recommendations ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.recommendations li {
+    margin-bottom: 10px;
+    padding-left: 25px;
+    position: relative;
+}
+
+.recommendations li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 6px;
+    width: 16px;
+    height: 16px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='9 11 12 14 22 4'/%3E%3Cpath d='M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.7;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .container {
+        margin: 20px;
+    }
+    
+    .header {
+        padding: 30px 20px;
+    }
+    
+    .header h1 {
+        font-size: 2rem;
+    }
+    
+    .form-section {
+        padding: 20px;
+    }
+    
+    .step-title {
+        font-size: 0.8rem;
+    }
+    
+    .result-container {
+        padding: 30px 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .header p {
+        font-size: 1rem;
+    }
+    
+    .progress-indicator {
+        flex-wrap: wrap;
+    }
+    
+    .step {
+        flex: 0 0 50%;
+        margin-bottom: 15px;
+    }
+    
+    .step-connection {
+        display: none;
+    }
+    
+    .risk-percentage {
+        font-size: 2rem;
+    }
+}
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tensorflow/4.2.0/tf.min.js"></script>
+    <script src="model.js"></script>
+    <script src="script.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- 装饰性图标 -->
+        <div class="ear-icon-decoration"></div>
+        <div class="brain-icon-decoration"></div>
+        
+        <!-- 头部区域 -->
+        <header class="header">
+            <!-- 脉冲环动画 -->
+            <div class="pulse-ring"></div>
+            <div class="pulse-ring"></div>
+            <div class="pulse-ring"></div>
+            
+            <!-- 图标和标题 -->
+            <div class="header-icon-container">
+                <div class="header-icon ear-icon"></div>
+                <div class="header-icon brain-icon"></div>
+            </div>
+            
+            <h1>High-Frequency Hearing Loss Prediction</h1>
+            <p>Fill in the following information to predict your risk of high-frequency hearing loss. This tool uses machine learning to estimate risk based on clinical and lifestyle factors.</p>
+            
+            <!-- 声波动画 -->
+            <div class="sound-wave"></div>
+            
+            <!-- 步骤指示器 -->
+            <div class="progress-indicator">
+                <div class="step active" id="step1">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Basic Information</div>
+                    <div class="step-connection"></div>
+                </div>
+                <div class="step" id="step2">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Lifestyle Habits</div>
+                    <div class="step-connection"></div>
+                </div>
+                <div class="step" id="step3">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Medical History</div>
+                    <div class="step-connection"></div>
+                </div>
+                <div class="step" id="step4">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Clinical Tests</div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- 表单部分 -->
+        <form id="hearing-form">
+            <!-- 基本信息部分 -->
+            <section class="form-section basic" id="section1">
+                <h2>Basic Information</h2>
+                
+                <div class="form-group">
+                    <label for="age_rank">Age Rank</label>
+                    <select id="age_rank" class="form-control" required>
+                        <option value="">Select your age rank</option>
+                        <option value="1">40-49 years</option>
+                        <option value="2">50-59 years</option>
+                        <option value="3">60-69 years</option>
+                        <option value="4">70-79 years</option>
+                        <option value="5">80+ years</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="gender">Gender</label>
+                    <select id="gender" class="form-control" required>
+                        <option value="">Select your gender</option>
+                        <option value="0">Female</option>
+                        <option value="1">Male</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="education_level">Education Level</label>
+                    <select id="education_level" class="form-control" required>
+                        <option value="">Select your education level</option>
+                        <option value="1">Less than high school</option>
+                        <option value="2">High school</option>
+                        <option value="3">Some college</option>
+                        <option value="4">College graduate or above</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="race">Race</label>
+                    <select id="race" class="form-control" required>
+                        <option value="">Select your race</option>
+                        <option value="1">Mexican American</option>
+                        <option value="2">Other Hispanic</option>
+                        <option value="3">Non-Hispanic White</option>
+                        <option value="4">Non-Hispanic Black</option>
+                        <option value="5">Other Race</option>
+                    </select>
+                </div>
+                
+                <button type="button" class="next-btn submit-btn" onclick="nextStep(1)">Next</button>
+            </section>
+			            <!-- 生活习惯部分 -->
+            <section class="form-section lifestyle" id="section2" style="display: none;">
+                <h2>Lifestyle Habits</h2>
+                
+                <div class="form-group">
+                    <label for="physical_labor">Physical Labor</label>
+                    <select id="physical_labor" class="form-control" required>
+                        <option value="">Select physical labor level</option>
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                    <span class="form-hint">Do you regularly engage in physical labor at work?</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="dairy_consumption">Dairy Consumption</label>
+                    <select id="dairy_consumption" class="form-control" required>
+                        <option value="">Select dairy consumption frequency</option>
+                        <option value="0">Never</option>
+                        <option value="1">Rarely</option>
+                        <option value="2">Sometimes</option>
+                        <option value="3">Often</option>
+                        <option value="4">Very Often</option>
+                    </select>
+                    <span class="form-hint">How often do you consume dairy products?</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="alcohol_consumption">Alcohol Consumption</label>
+                    <select id="alcohol_consumption" class="form-control" required>
+                        <option value="">Select alcohol consumption level</option>
+                        <option value="0">Never</option>
+                        <option value="1">Rarely</option>
+                        <option value="2">Sometimes</option>
+                        <option value="3">Often</option>
+                    </select>
+                    <span class="form-hint">How often do you consume alcoholic beverages?</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="smoking_status">Smoking Status</label>
+                    <select id="smoking_status" class="form-control" required>
+                        <option value="">Select your smoking status</option>
+                        <option value="0">Never smoked</option>
+                        <option value="1">Former smoker</option>
+                        <option value="2">Current smoker</option>
+                    </select>
+                </div>
+                
+                <button type="button" class="prev-btn submit-btn" onclick="prevStep(2)">Previous</button>
+                <button type="button" class="next-btn submit-btn" onclick="nextStep(2)">Next</button>
+            </section>
+            
+            <!-- 医疗历史部分 -->
+            <section class="form-section medical" id="section3" style="display: none;">
+                <h2>Medical History</h2>
+                
+                <div class="form-group">
+                    <label for="hearing_status">Hearing Status</label>
+                    <select id="hearing_status" class="form-control" required>
+                        <option value="">Select your hearing status</option>
+                        <option value="1">Excellent</option>
+                        <option value="2">Good</option>
+                        <option value="3">A little trouble</option>
+                        <option value="4">Moderate trouble</option>
+                        <option value="5">A lot of trouble</option>
+                        <option value="6">Deaf</option>
+                    </select>
+                    <span class="form-hint">How would you rate your overall hearing ability?</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="tinnitus">Tinnitus</label>
+                    <select id="tinnitus" class="form-control" required>
+                        <option value="">Do you experience tinnitus?</option>
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                    <span class="form-hint">Tinnitus is the perception of noise or ringing in the ears.</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="blood_pressure">Blood Pressure</label>
+                    <select id="blood_pressure" class="form-control" required>
+                        <option value="">Select your blood pressure status</option>
+                        <option value="0">Normal</option>
+                        <option value="1">Elevated</option>
+                        <option value="2">Hypertension</option>
+                    </select>
+                </div>
+                
+                <button type="button" class="prev-btn submit-btn" onclick="prevStep(3)">Previous</button>
+                <button type="button" class="next-btn submit-btn" onclick="nextStep(3)">Next</button>
+            </section>
+	            <!-- 临床测试结果部分 -->
+            <section class="form-section clinical" id="section4" style="display: none;">
+                <h2>Clinical Test Results</h2>
+                
+                <div class="form-group">
+                    <label for="triglycerides">Triglycerides (mg/dL)</label>
+                    <input type="number" id="triglycerides" class="form-control" min="0" step="1" required>
+                    <span class="form-hint">Normal range: less than 150 mg/dL</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="cholesterol">Total Cholesterol (mg/dL)</label>
+                    <input type="number" id="cholesterol" class="form-control" min="0" step="1" required>
+                    <span class="form-hint">Normal range: less than 200 mg/dL</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="fasting_blood_glucose">Fasting Blood Glucose (mg/dL)</label>
+                    <input type="number" id="fasting_blood_glucose" class="form-control" min="0" step="1" required>
+                    <span class="form-hint">Normal range: less than 100 mg/dL</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="bmi">Body Mass Index (BMI)</label>
+                    <input type="number" id="bmi" class="form-control" min="0" step="0.1" required>
+                    <span class="form-hint">Normal range: 18.5 to 24.9</span>
+                </div>
+                
+                <button type="button" class="prev-btn submit-btn" onclick="prevStep(4)">Previous</button>
+                <div class="submit-btn-container">
+                    <button type="button" class="submit-btn" onclick="predict()">Predict Risk</button>
+                </div>
+            </section>
+        </form>
+        
+        <!-- 结果显示区域 -->
+        <div class="result-container" id="result-container">
+            <h2 class="result-title">Your High-Frequency Hearing Loss Risk</h2>
+            
+            <!-- 风险仪表盘 -->
+            <div class="risk-meter-container">
+                <div class="risk-meter">
+                    <!-- 刻度线 -->
+                    <div class="gauge-mark"></div>
+                    <div class="gauge-mark"></div>
+                    <div class="gauge-mark"></div>
+                    <div class="gauge-mark"></div>
+                    <div class="gauge-mark"></div>
+                    <div class="gauge-mark"></div>
+                    <div class="gauge-mark"></div>
+                    <div class="gauge-mark"></div>
+                    <div class="gauge-mark"></div>
+                    
+                    <!-- 仪表填充 -->
+                    <div class="gauge-fill" id="gauge-fill"></div>
+                    
+                    <!-- 指针 -->
+                    <div class="gauge-needle" id="gauge-needle"></div>
+                </div>
+                
+                <!-- 风险百分比 -->
+                <div class="risk-percentage" id="risk-percentage">0%</div>
+            </div>
+            
+            <!-- 风险描述 -->
+            <div class="risk-description" id="risk-description">
+                Your risk of high-frequency hearing loss will be displayed here.
+            </div>
+            
+            <!-- 建议 -->
+            <div class="recommendations">
+                <h3>Recommendations</h3>
+                <ul id="recommendations-list">
+                    <li>Complete the form to receive personalized recommendations.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script>
+        // 当DOM加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 创建粒子效果
+            createParticles();
+        });
+
+        // 创建粒子效果函数 - 仅视觉增强，不影响功能
+        function createParticles() {
+            const header = document.querySelector('.header');
+            for (let i = 0; i < 25; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.width = `${Math.random() * 5 + 1}px`;
+                particle.style.height = particle.style.width;
+                particle.style.background = 'rgba(255, 255, 255, 0.5)';
+                particle.style.borderRadius = '50%';
+                particle.style.position = 'absolute';
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.animation = `float ${Math.random() * 10 + 5}s linear infinite`;
+                particle.style.opacity = Math.random() * 0.5;
+                particle.style.zIndex = '1';
+                
+                header.appendChild(particle);
+            }
+        }
+        
+        // 步骤切换函数 - 保持原始功能
+        function nextStep(currentStep) {
+            // 验证当前步骤的表单
+            const currentSection = document.getElementById(`section${currentStep}`);
+            const inputs = currentSection.querySelectorAll('input, select');
+            let isValid = true;
+            
+            inputs.forEach(input => {
+                if (input.hasAttribute('required') && !input.value) {
+                    isValid = false;
+                    input.style.borderColor = 'var(--danger-color)';
+                } else {
+                    input.style.borderColor = '';
+                }
+            });
+            
+            if (!isValid) {
+                alert('请填写所有必填字段');
+                return;
+            }
+            
+            // 隐藏当前步骤，显示下一步骤
+            document.getElementById(`section${currentStep}`).style.display = 'none';
+            document.getElementById(`section${currentStep + 1}`).style.display = 'block';
+            
+            // 更新步骤指示器
+            document.getElementById(`step${currentStep}`).classList.remove('active');
+            document.getElementById(`step${currentStep + 1}`).classList.add('active');
+            
+            // 平滑滚动到顶部
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+        
+        function prevStep(currentStep) {
+            // 隐藏当前步骤，显示上一步骤
+            document.getElementById(`section${currentStep}`).style.display = 'none';
+            document.getElementById(`section${currentStep - 1}`).style.display = 'block';
+            
+            // 更新步骤指示器
+            document.getElementById(`step${currentStep}`).classList.remove('active');
+            document.getElementById(`step${currentStep - 1}`).classList.add('active');
+            
+            // 平滑滚动到顶部
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+        
+        // 预测函数 - 完全保留原始功能
+        function predict() {
+            // 收集表单数据
+            const age_rank = parseInt(document.getElementById('age_rank').value);
+            const gender = parseInt(document.getElementById('gender').value);
+            const education_level = parseInt(document.getElementById('education_level').value);
+            const race = parseInt(document.getElementById('race').value);
+            const physical_labor = parseInt(document.getElementById('physical_labor').value);
+            const dairy_consumption = parseInt(document.getElementById('dairy_consumption').value);
+            const alcohol_consumption = parseInt(document.getElementById('alcohol_consumption').value);
+            const smoking_status = parseInt(document.getElementById('smoking_status').value);
+            const hearing_status = parseInt(document.getElementById('hearing_status').value);
+            const tinnitus = parseInt(document.getElementById('tinnitus').value);
+            const blood_pressure = parseInt(document.getElementById('blood_pressure').value);
+            const triglycerides = parseInt(document.getElementById('triglycerides').value);
+            const cholesterol = parseInt(document.getElementById('cholesterol').value);
+            const fasting_blood_glucose = parseInt(document.getElementById('fasting_blood_glucose').value);
+            const bmi = parseFloat(document.getElementById('bmi').value);
+            
+            // 检查所有输入是否已填写
+            if (isNaN(age_rank) || isNaN(gender) || isNaN(education_level) || isNaN(race) || 
+                isNaN(physical_labor) || isNaN(dairy_consumption) || isNaN(alcohol_consumption) || 
+                isNaN(smoking_status) || isNaN(hearing_status) || isNaN(tinnitus) || 
+                isNaN(blood_pressure) || isNaN(triglycerides) || isNaN(cholesterol) || 
+                isNaN(fasting_blood_glucose) || isNaN(bmi)) {
+                alert('请填写所有必填字段');
+                return;
+            }
+            
+            // 显示结果容器
+            document.getElementById('result-container').style.display = 'block';
+            
+            // 平滑滚动到结果部分
+            document.getElementById('result-container').scrollIntoView({
+                behavior: 'smooth'
+            });
+            
+            // 使用TensorFlow.js模型进行预测
+            // 准备输入数据 - 保持原始格式
+            const input = [
+                age_rank, gender, education_level, race, physical_labor,
+                dairy_consumption, alcohol_consumption, smoking_status,
+                hearing_status, tinnitus, blood_pressure, triglycerides,
+                cholesterol, fasting_blood_glucose, bmi
+            ];
+            
+            // 调用模型进行预测 - 保持原始调用方式
+            model.predict(tf.tensor2d([input])).array().then(predictions => {
+                const risk = predictions[0][0] * 100;
+                
+                // 更新结果显示
+                updateResultDisplay(risk);
+            });
+        }
+        
+        // 结果显示函数 - 视觉增强但保持原始信息
+        function updateResultDisplay(risk) {
+            // 保留原始格式的风险值
+            const riskValue = parseFloat(risk).toFixed(1);
+            
+            // 更新风险百分比显示
+            const riskPercentageElement = document.getElementById('risk-percentage');
+            riskPercentageElement.textContent = `${riskValue}%`;
+            
+            // 更新仪表盘视觉效果
+            const gaugeFill = document.getElementById('gauge-fill');
+            const gaugeNeedle = document.getElementById('gauge-needle');
+            const riskDescription = document.getElementById('risk-description');
+            const recommendationsList = document.getElementById('recommendations-list');
+            
+            // 设置仪表盘填充高度
+            gaugeFill.style.height = `${risk}%`;
+            
+            // 设置指针旋转角度 (-90度到90度的范围)
+            const needleRotation = -90 + (risk / 100 * 180);
+            gaugeNeedle.style.transform = `translateX(-50%) rotate(${needleRotation}deg)`;
+            
+            // 根据风险级别设置风险显示类
+            riskPercentageElement.className = 'risk-percentage';
+            riskDescription.className = 'risk-description';
+            
+            // 移除之前可能添加的类
+            riskPercentageElement.classList.remove('low', 'medium', 'high');
+            riskDescription.classList.remove('low', 'medium', 'high');
+            
+            // 根据风险范围添加相应的类
+            if (risk < 30) {
+                riskPercentageElement.classList.add('low');
+                riskDescription.classList.add('low');
+                riskDescription.textContent = '您的高频听力损失风险较低。';
+                
+                // 更新建议列表
+                recommendationsList.innerHTML = `
+                    <li>定期进行听力检查，特别是年龄增长后。</li>
+                    <li>避免长时间暴露在高分贝噪音环境中。</li>
+                    <li>使用耳机时控制音量和使用时间。</li>
+                    <li>保持健康的生活方式和饮食习惯。</li>
+                `;
+            } else if (risk < 70) {
+                riskPercentageElement.classList.add('medium');
+                riskDescription.classList.add('medium');
+                riskDescription.textContent = '您的高频听力损失风险中等。需要注意听力保护。';
+                
+                // 更新建议列表
+                recommendationsList.innerHTML = `
+                    <li>建议每年进行一次听力检查。</li>
+                    <li>在噪音环境中佩戴听力保护装置。</li>
+                    <li>限制使用耳机的时间，控制音量。</li>
+                    <li>注意控制血压和血糖水平。</li>
+                    <li>如有耳鸣症状，及时咨询专业医师。</li>
+                `;
+            } else {
+                riskPercentageElement.classList.add('high');
+                riskDescription.classList.add('high');
+                riskDescription.textContent = '您的高频听力损失风险较高。请采取积极措施保护听力并咨询专业医师。';
+                
+                // 更新建议列表
+                recommendationsList.innerHTML = `
+                    <li>尽快咨询耳鼻喉科医师进行专业听力评估。</li>
+                    <li>严格控制耳机使用和噪音暴露。</li>
+                    <li>密切监控血压、血糖和胆固醇等健康指标。</li>
+                    <li>考虑改变生活方式，如减少酒精摄入和戒烟。</li>
+                    <li>在医师指导下进行听力康复训练。</li>
+                `;
+            }
+            
+            // 添加动画效果类，使变化更平滑
+            gaugeFill.classList.add('animated');
+            setTimeout(() => {
+                gaugeFill.classList.remove('animated');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>	
