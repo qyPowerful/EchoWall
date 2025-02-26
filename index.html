@@ -1137,6 +1137,230 @@
             text-align: center; /* 额外保证居中 */
             align-items: center; /* 垂直居中 */
         }
+
+        /* 完善移动端适配 */
+        /* 基础响应式设置 */
+        @media (max-width: 992px) {
+            .container {
+                margin: 20px 15px;
+                width: auto;
+            }
+            
+            .header {
+                padding: 40px 25px 30px;
+            }
+            
+            .header h1 {
+                font-size: 28px;
+            }
+            
+            .header p {
+                font-size: 14px;
+            }
+            
+            /* 进度指示器调整 */
+            .progress-indicator {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 20px 15px;
+            }
+            
+            .progress-indicator::before {
+                left: 25px;
+                right: auto;
+                top: 70px;
+                bottom: 70px;
+                width: 2px;
+                height: auto;
+                background: repeating-linear-gradient(
+                    to bottom,
+                    var(--primary-light),
+                    var(--primary-light) 5px,
+                    transparent 5px,
+                    transparent 10px
+                );
+            }
+            
+            .progress-step {
+                margin: 15px 0;
+            }
+            
+            /* 表单区域缩小内边距 */
+            .form-section {
+                margin: 0 20px 25px;
+                padding: 25px 20px;
+            }
+            
+            /* 表单布局变为单列 */
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            /* 风险仪表盘缩小 */
+            .risk-meter-container {
+                width: 280px;
+                height: 280px;
+            }
+            
+            .risk-meter {
+                width: 220px;
+                height: 220px;
+            }
+            
+            .risk-gauge {
+                width: 280px;
+                height: 280px;
+            }
+            
+            /* 推荐项在中等屏幕保持两列 */
+            .recommendations-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+        }
+
+        /* 更小屏幕的适配 */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .form-section h2 {
+                font-size: 20px;
+            }
+            
+            /* 改进表单控件在移动设备上的显示 */
+            .form-control {
+                padding: 12px 14px;
+                font-size: 15px;
+            }
+            
+            /* 缩放提交按钮 */
+            .submit-btn {
+                padding: 15px 30px;
+                font-size: 16px;
+                min-width: 240px;
+            }
+            
+            /* 风险描述文本调整 */
+            .risk-description {
+                padding: 20px;
+                font-size: 14px;
+            }
+            
+            /* 风险仪表盘文字大小调整 */
+            .risk-percentage {
+                font-size: 38px;
+            }
+            
+            /* 推荐标题和内容 */
+            .recommendations h3 {
+                font-size: 20px;
+            }
+            
+            .recommendation-title {
+                font-size: 16px;
+            }
+            
+            .recommendation-desc {
+                font-size: 14px;
+            }
+            
+            /* 调整配图尺寸 */
+            .recommendation-icon {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .recommendation-icon i {
+                font-size: 24px;
+            }
+        }
+
+        /* 极小屏幕适配 */
+        @media (max-width: 576px) {
+            .container {
+                margin: 10px;
+                border-radius: 12px;
+            }
+            
+            .header {
+                padding: 30px 20px 25px;
+                border-radius: 12px 12px 0 0;
+            }
+            
+            .header h1 {
+                font-size: 22px;
+            }
+            
+            .header p {
+                font-size: 13px;
+            }
+            
+            /* 风险仪表盘进一步缩小 */
+            .risk-meter-container {
+                width: 240px;
+                height: 240px;
+            }
+            
+            .risk-meter {
+                width: 180px;
+                height: 180px;
+            }
+            
+            .risk-gauge {
+                width: 240px;
+                height: 240px;
+            }
+            
+            /* 风险百分比文字 */
+            .risk-percentage {
+                font-size: 32px;
+            }
+            
+            /* 推荐部分变为单列 */
+            .recommendations-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            /* 缩放推荐部分的图标 */
+            .recommendation-icon {
+                width: 50px;
+                height: 50px;
+            }
+            
+            /* 修改结果容器边距 */
+            .result-container {
+                margin: 0 15px 20px;
+                padding: 30px 15px;
+            }
+            
+            /* 提交按钮的宽度 */
+            .submit-btn {
+                width: 90%;
+                min-width: auto;
+            }
+        }
+
+        /* 优化触摸体验 */
+        @media (hover: none) and (pointer: coarse) {
+            /* 增加点击区域 */
+            .form-control, .submit-btn {
+                min-height: 48px; /* 适合手指点击的最小高度 */
+            }
+            
+            /* 移除仅适用于鼠标的悬停效果 */
+            .form-control:hover {
+                transform: none;
+            }
+            
+            /* 调整选择框的下拉箭头尺寸 */
+            .form-control {
+                background-size: 20px;
+                background-position: right 10px center;
+            }
+        }
     </style>
 </head>
 <body>
