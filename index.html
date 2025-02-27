@@ -6,7 +6,7 @@
     <title>High-Frequency Hearing Loss Prediction</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- 娣诲姞Iconify搴?-->
+    <!-- 添加Iconify库 -->
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <style>
         :root {
@@ -38,7 +38,7 @@
             overflow-x: hidden;
         }
         
-        /* 娣诲姞绮掑瓙鑳屾櫙鐢诲竷 */
+        /* 添加粒子背景画布 */
         #particles-canvas {
             position: fixed;
             top: 0;
@@ -49,7 +49,7 @@
             opacity: 0.8;
         }
         
-        /* 鍒涘缓绉戞妧椋庢牸鑳屾櫙 */
+        /* 创建科技风格背景 */
         body::before {
             content: '';
             position: fixed;
@@ -63,7 +63,7 @@
             z-index: -1;
         }
 
-        /* 娣诲姞鍚姏鍥炬爣鐨勭綉鏍艰儗鏅?*/
+        /* 添加听力图标的网格背景 */
         body::after {
             content: '';
             position: fixed;
@@ -86,7 +86,7 @@
             overflow: hidden;
         }
 
-        /* 鍚姏鍥炬爣瑁呴グ */
+        /* 听力图标装饰 */
         .ear-icon-decoration {
             position: absolute;
             width: 300px;
@@ -102,7 +102,7 @@
             transform: rotate(-15deg);
         }
 
-        /* 澶ц剳鍥炬爣瑁呴グ */
+        /* 大脑图标装饰 */
         .brain-icon-decoration {
             position: absolute;
             width: 300px;
@@ -127,7 +127,7 @@
             overflow: hidden;
         }
 
-        /* 娣诲姞鍚姏娉㈠舰瑁呴グ */
+        /* 添加听力波形装饰 */
         .header::before {
             content: '';
             position: absolute;
@@ -141,7 +141,7 @@
             z-index: 1;
         }
 
-        /* 鍚姏娉㈠舰鍔ㄧ敾 */
+        /* 听力波形动画 */
         .sound-wave {
             position: absolute;
             bottom: 0;
@@ -179,7 +179,7 @@
             50% { transform: scaleY(1.5); background: rgba(74, 144, 226, 0.5); }
         }
 
-        /* 鑰虫湹鍚姏鍔ㄧ敾 */
+        /* 耳朵听力动画 */
         .header-icon-container {
             position: relative;
             width: 120px;
@@ -197,7 +197,7 @@
             z-index: 2;
         }
 
-        /* 鍚姏娉㈢汗鍔ㄧ敾 */
+        /* 听力波纹动画 */
         .pulse-rings {
             position: absolute;
             left: 50%;
@@ -252,9 +252,9 @@
             }
         }
 
-        /* 鍒犻櫎棰戠巼浠〃鐩樻牱寮忥紝浣嗕繚鐣欏叾浠栧姩鐢?*/
+        /* 删除频率仪表盘样式，但保留其他动画 */
 
-        /* 鍚姏鎹熷け鍥捐〃瑁呴グ */
+        /* 听力损失图表装饰 */
         .hearing-chart {
             position: absolute;
             bottom: 40px;
@@ -320,7 +320,7 @@
             line-height: 1.8;
         }
 
-        /* 淇敼杩涘害鎸囩ず鍣ㄦ牱寮忥紝娣诲姞绠ご */
+        /* 修改进度指示器样式，添加箭头 */
         .progress-indicator {
             display: flex;
             justify-content: center;
@@ -333,7 +333,7 @@
             z-index: 5;
         }
 
-        /* 绉婚櫎鍘熸潵鐨勮櫄绾胯繛鎺ユ牱寮?*/
+        /* 移除原来的虚线连接样式 */
         .progress-indicator::before {
             content: none;
         }
@@ -346,7 +346,7 @@
             z-index: 2;
         }
 
-        /* 淇敼姝ラ鎸囩ず鍣ㄧ殑绠ご鏍峰紡锛岄槻姝笌鍦嗙幆閲嶅彔 */
+        /* 修改步骤指示器的箭头样式，防止与圆环重叠 */
         .progress-step:not(:last-child)::after {
             content: '';
             position: absolute;
@@ -355,7 +355,7 @@
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24' fill='none' stroke='%234A90E2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='5' y1='12' x2='19' y2='12'%3E%3C/line%3E%3Cpolyline points='12 5 19 12 12 19'%3E%3C/polyline%3E%3C/svg%3E");
             background-size: contain;
             background-repeat: no-repeat;
-            right: -45px; /* 淇敼浣嶇疆锛屽皢绠ご绉昏繙涓€浜?*/
+            right: -45px; /* 修改位置，将箭头移远一些 */
             top: 50%;
             transform: translateY(-50%);
             z-index: 1;
@@ -385,7 +385,7 @@
             box-shadow: 0 6px 20px rgba(74, 144, 226, 0.2);
         }
 
-        /* 姝ラ鍥炬爣鍔ㄧ敾 */
+        /* 步骤图标动画 */
         .step-number::before {
             content: '';
             position: absolute;
@@ -450,19 +450,19 @@
             transform: translateY(30px);
         }
 
-        /* 涓鸿繘鍏ヨ鍥剧殑鍗＄墖娣诲姞鍔ㄧ敾绫?*/
+        /* 为进入视图的卡片添加动画类 */
         .form-section.animate-in {
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* 鍗＄墖鎮诞鏁堟灉 */
+        /* 卡片悬浮效果 */
         .form-section:hover {
             transform: translateY(-10px) scale(1.01);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
         }
 
-        /* 绉戞妧鎰熻楗扮嚎鏉?*/
+        /* 科技感装饰线条 */
         .form-section::before {
             content: '';
             position: absolute;
@@ -474,7 +474,7 @@
             border-radius: 4px;
         }
 
-        /* 娣诲姞鐢佃矾鏉胯儗鏅厓绱?*/
+        /* 添加电路板背景元素 */
         .form-section::after {
             content: '';
             position: absolute;
@@ -540,13 +540,13 @@
             align-items: center;
         }
 
-        /* 淇敼琛ㄥ崟鏍囩鍓嶇殑鍥炬爣鏍峰紡锛屾敼涓轰娇鐢↖conify */
+        /* 修改表单标签前的图标样式，改为使用Iconify */
         .form-group label::before {
             content: "";
             display: none;
         }
 
-        /* 娣诲姞Iconify鍥炬爣鍒拌〃鍗曟爣绛?*/
+        /* 添加Iconify图标到表单标签 */
         .form-group iconify-icon {
             margin-right: 8px;
             font-size: 20px;
@@ -560,7 +560,7 @@
             transform: scale(1.2);
         }
 
-        /* 1. 鎻愪氦鎸夐挳闇撹櫣鑴夊啿鏁堟灉 */
+        /* 1. 提交按钮霓虹脉冲效果 */
         .submit-btn {
             background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
             color: white;
@@ -580,14 +580,14 @@
             overflow: hidden;
         }
 
-        /* 娣诲姞棰勬祴鎸夐挳鎮仠鏁堟灉 */
+        /* 添加预测按钮悬停效果 */
         .submit-btn:hover {
-            transform: scale(1.05); /* 鏀惧ぇ鏁堟灉 */
-            box-shadow: 0 15px 30px rgba(74, 144, 226, 0.4); /* 鍔犲己闃村奖 */
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); /* 娓愬彉鍙樺寲 */
+            transform: scale(1.05); /* 放大效果 */
+            box-shadow: 0 15px 30px rgba(74, 144, 226, 0.4); /* 加强阴影 */
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); /* 渐变变化 */
         }
 
-        /* 鐐瑰嚮娉㈢汗鏁堟灉 */
+        /* 点击波纹效果 */
         .submit-btn-ripple {
             position: absolute;
             top: 0;
@@ -614,7 +614,7 @@
             }
         }
 
-        /* 2. 杈撳叆閫夋嫨妗嗙幇浠ｅ寲鏁堟灉 */
+        /* 2. 输入选择框现代化效果 */
         .form-control {
             width: 100%;
             padding: 14px 16px;
@@ -631,7 +631,7 @@
             background-size: 16px;
             cursor: pointer;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.01);
-            /* 娣诲姞閫夋嫨鐘舵€佹牱寮?*/
+            /* 添加选择状态样式 */
             transform-style: preserve-3d;
             perspective: 1000px;
         }
@@ -649,7 +649,7 @@
             transform: translateY(-2px);
         }
 
-        /* 閫変腑鐘舵€?*/
+        /* 选中状态 */
         .form-control option {
             padding: 12px;
             transition: all 0.2s ease;
@@ -664,7 +664,7 @@
             font-weight: 600;
         }
 
-        /* 3. 缁撴灉灞曠ず鍖?D鏁堟灉 */
+        /* 3. 结果展示区3D效果 */
         .result-container {
             display: none;
             margin: 0 40px 40px;
@@ -674,7 +674,7 @@
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
             position: relative;
             overflow: hidden;
-            /* 娣诲姞3D鏁堟灉 */
+            /* 添加3D效果 */
             transform-style: preserve-3d;
             perspective: 1000px;
             transform: translateZ(0);
@@ -697,7 +697,7 @@
             }
         }
 
-        /* 鏀硅繘椋庨櫓浠〃鐩?*/
+        /* 改进风险仪表盘 */
         .risk-meter-container {
             position: relative;
             width: 320px;
@@ -755,7 +755,7 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* 鍔ㄦ€侀闄╀华琛ㄧ洏 */
+        /* 动态风险仪表盘 */
         .risk-gauge {
             position: absolute;
             width: 320px;
@@ -783,7 +783,7 @@
             animation: gauge-fill 2s ease-out forwards;
         }
 
-        /* 娣诲姞鍖荤枟鐩稿叧鏍囧織 */
+        /* 添加医疗相关标志 */
         .medical-badge {
             position: absolute;
             top: 35px;
@@ -807,7 +807,7 @@
             font-size: 14px;
         }
 
-        /* 浠〃鐩樺埢搴?*/
+        /* 仪表盘刻度 */
         .gauge-marks {
             position: absolute;
             top: 0;
@@ -827,7 +827,7 @@
             top: 0;
         }
 
-        /* 澧炲姞鏇村鍒诲害锛屽苟娣诲姞涓嶅悓鐨勯鑹?*/
+        /* 增加更多刻度，并添加不同的颜色 */
         .gauge-mark:nth-child(1), .gauge-mark:nth-child(2), .gauge-mark:nth-child(3), 
         .gauge-mark:nth-child(4), .gauge-mark:nth-child(5), .gauge-mark:nth-child(6), .gauge-mark:nth-child(7) {
             background: rgba(46, 204, 113, 0.7);
@@ -846,7 +846,7 @@
             height: 15px;
         }
 
-        /* 涓?0涓埢搴﹁鏄剧ず鏁版嵁鏉ユ簮淇℃伅 */
+        /* 为20个刻度设置角度 */
         .gauge-mark:nth-child(1) { transform: rotate(-180deg); }
         .gauge-mark:nth-child(2) { transform: rotate(-162deg); }
         .gauge-mark:nth-child(3) { transform: rotate(-144deg); }
@@ -868,7 +868,7 @@
         .gauge-mark:nth-child(19) { transform: rotate(144deg); }
         .gauge-mark:nth-child(20) { transform: rotate(162deg); }
 
-        /* 椋庨櫓鍖哄煙鏍囩鏄剧ず鏁版嵁鏉ユ簮淇℃伅 */
+        /* 风险区域标签 */
         .risk-zones {
             position: absolute;
             width: 100%;
@@ -904,7 +904,7 @@
             color: var(--danger-color);
         }
 
-        /* 浠〃鐩樻寚閽?*/
+        /* 仪表盘指针 */
         .gauge-needle {
             position: absolute;
             width: 120px;
@@ -946,7 +946,7 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
 
-        /* 鏄剧ず鏁版嵁鏉ユ簮淇℃伅 */
+        /* 显示数据来源信息 */
         .data-source {
             position: absolute;
             bottom: 5px;
@@ -980,7 +980,7 @@
             z-index: 2;
         }
 
-        /* 鏀硅繘鐨勬帹鑽愬崱鐗囨牱寮?*/
+        /* 改进的推荐卡片样式 */
         .recommendations {
             margin-top: 60px;
         }
@@ -1012,7 +1012,7 @@
 
         .recommendations-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 鍥哄畾涓ゅ垪 */
+            grid-template-columns: repeat(2, 1fr); /* 固定两列 */
             gap: 30px;
         }
 
@@ -1055,7 +1055,7 @@
         .recommendation-icon {
             width: 60px;
             height: 60px;
-            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light)); /* 鏇存繁鐨勮摑鑹茶儗鏅?*/
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light)); /* 更深的蓝色背景 */
             border-radius: 12px;
             display: flex;
             align-items: center;
@@ -1068,7 +1068,7 @@
         .recommendation-icon i {
             color: white;
             font-size: 28px;
-            filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2)); /* 娣诲姞闃村奖澧炲姞鍙樹负鍗曞垪 */
+            filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2)); /* 添加阴影增加可见度 */
         }
 
         .recommendation-item:hover .recommendation-icon {
@@ -1107,39 +1107,39 @@
             font-size: 15px;
         }
 
-        /* 淇敼鍝嶅簲寮忓竷灞€锛岀'淇濆湪灏忓睆骞曚笂涔熸槸2*2甯冨眬 */
+        /* 修改响应式布局，确保在小屏幕上也是2*2布局 */
         @media (max-width: 768px) {
             .recommendations-grid {
-                grid-template-columns: repeat(2, 1fr); /* 淇濇寔涓ゅ垪 */
+                grid-template-columns: repeat(2, 1fr); /* 保持两列 */
                 gap: 20px;
             }
         }
 
         @media (max-width: 576px) {
             .recommendations-grid {
-                grid-template-columns: 1fr; /* 鍦ㄩ潪甯稿皬鐨勫睆骞曚笂鏀逛负鍗曞垪 */
+                grid-template-columns: 1fr; /* 在非常小的屏幕上改为单列 */
             }
         }
 
-        /* 鎵惧埌骞跺垹闄?data source 鐨勫厓绱犲拰鏍峰紡 */
+        /* 找到并删除 data source 的元素和样式 */
         .risk-meter-container .data-source {
-            /* 绉婚櫎姝ゅ厓绱犵殑鏍峰紡锛屾垨鑰呬繚鐣欐牱寮忎絾鏄皢鍏冪礌璁句负涓嶅彲瑙?*/
+            /* 移除此元素的样式，或者保留样式但是将元素设为不可见 */
             display: none;
         }
 
         .submit-btn-container {
             position: relative;
             display: flex;
-            justify-content: center; /* 纭繚鎸夐挳灞呬腑 */
+            justify-content: center; /* 确保按钮居中 */
             margin: 60px auto 70px;
             z-index: 5;
-            width: 100%; /* 纭繚瀹瑰櫒鍗犳嵁鏁磋瀹藉害 */
-            text-align: center; /* 棰濆淇濊瘉灞呬腑 */
-            align-items: center; /* 鍨傜洿灞呬腑 */
+            width: 100%; /* 确保容器占据整行宽度 */
+            text-align: center; /* 额外保证居中 */
+            align-items: center; /* 垂直居中 */
         }
 
-        /* 瀹屽杽绉诲姩绔€傞厤 */
-        /* 鍩虹鍝嶅簲寮忚缃?*/
+        /* 完善移动端适配 */
+        /* 基础响应式设置 */
         @media (max-width: 992px) {
             .container {
                 margin: 20px 15px;
@@ -1158,7 +1158,7 @@
                 font-size: 14px;
             }
             
-            /* 杩涘害鎸囩ず鍣ㄨ皟鏁?*/
+            /* 进度指示器调整 */
             .progress-indicator {
                 flex-direction: column;
                 align-items: flex-start;
@@ -1185,19 +1185,19 @@
                 margin: 15px 0;
             }
             
-            /* 琛ㄥ崟鍖哄煙缂╁皬鍐呰竟璺?*/
+            /* 表单区域缩小内边距 */
             .form-section {
                 margin: 0 20px 25px;
                 padding: 25px 20px;
             }
             
-            /* 琛ㄥ崟甯冨眬鍙樹负鍗曞垪 */
+            /* 表单布局变为单列 */
             .form-grid {
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
             
-            /* 椋庨櫓浠〃鐩樼缉灏?*/
+            /* 风险仪表盘缩小 */
             .risk-meter-container {
                 width: 280px;
                 height: 280px;
@@ -1213,14 +1213,14 @@
                 height: 280px;
             }
             
-            /* 鎺ㄨ崘椤瑰湪涓瓑灞忓箷淇濇寔涓ゅ垪 */
+            /* 推荐项在中等屏幕保持两列 */
             .recommendations-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 20px;
             }
         }
 
-        /* 鏇村皬灞忓箷鐨勯€傞厤 */
+        /* 更小屏幕的适配 */
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 24px;
@@ -1230,31 +1230,31 @@
                 font-size: 20px;
             }
             
-            /* 鏀硅繘琛ㄥ崟鎺т欢鍦ㄧЩ鍔ㄨ澶囦笂鐨勬樉绀?*/
+            /* 改进表单控件在移动设备上的显示 */
             .form-control {
                 padding: 12px 14px;
                 font-size: 15px;
             }
             
-            /* 缂╂斁鎻愪氦鎸夐挳 */
+            /* 缩放提交按钮 */
             .submit-btn {
                 padding: 15px 30px;
                 font-size: 16px;
                 min-width: 240px;
             }
             
-            /* 椋庨櫓鎻忚堪鏂囨湰璋冩暣 */
+            /* 风险描述文本调整 */
             .risk-description {
                 padding: 20px;
                 font-size: 14px;
             }
             
-            /* 椋庨櫓浠〃鐩樻枃瀛楀ぇ灏忚皟鏁?*/
+            /* 风险仪表盘文字大小调整 */
             .risk-percentage {
                 font-size: 38px;
             }
             
-            /* 鎺ㄨ崘鏍囬鍜屽唴瀹?*/
+            /* 推荐标题和内容 */
             .recommendations h3 {
                 font-size: 20px;
             }
@@ -1267,7 +1267,7 @@
                 font-size: 14px;
             }
             
-            /* 璋冩暣閰嶅浘灏哄 */
+            /* 调整配图尺寸 */
             .recommendation-icon {
                 width: 50px;
                 height: 50px;
@@ -1278,7 +1278,7 @@
             }
         }
 
-        /* 鏋佸皬灞忓箷閫傞厤 */
+        /* 极小屏幕适配 */
         @media (max-width: 576px) {
             .container {
                 margin: 10px;
@@ -1298,7 +1298,7 @@
                 font-size: 13px;
             }
             
-            /* 椋庨櫓浠〃鐩樿繘涓€姝ョ缉灏?*/
+            /* 风险仪表盘进一步缩小 */
             .risk-meter-container {
                 width: 240px;
                 height: 240px;
@@ -1314,48 +1314,48 @@
                 height: 240px;
             }
             
-            /* 椋庨櫓鐧惧垎姣旀枃瀛?*/
+            /* 风险百分比文字 */
             .risk-percentage {
                 font-size: 32px;
             }
             
-            /* 鎺ㄨ崘閮ㄥ垎鍙樹负鍗曞垪 */
+            /* 推荐部分变为单列 */
             .recommendations-grid {
                 grid-template-columns: 1fr;
             }
             
-            /* 缂╂斁鎺ㄨ崘閮ㄥ垎鐨勫浘鏍?*/
+            /* 缩放推荐部分的图标 */
             .recommendation-icon {
                 width: 50px;
                 height: 50px;
             }
             
-            /* 淇敼缁撴灉瀹瑰櫒杈硅窛 */
+            /* 修改结果容器边距 */
             .result-container {
                 margin: 0 15px 20px;
                 padding: 30px 15px;
             }
             
-            /* 鎻愪氦鎸夐挳鐨勫搴?*/
+            /* 提交按钮的宽度 */
             .submit-btn {
                 width: 90%;
                 min-width: auto;
             }
         }
 
-        /* 浼樺寲瑙︽懜浣撻獙 */
+        /* 优化触摸体验 */
         @media (hover: none) and (pointer: coarse) {
-            /* 澧炲姞鐐瑰嚮鍖哄煙 */
+            /* 增加点击区域 */
             .form-control, .submit-btn {
-                min-height: 48px; /* 閫傚悎鎵嬫寚鐐瑰嚮鐨勬渶灏忛珮搴?*/
+                min-height: 48px; /* 适合手指点击的最小高度 */
             }
             
-            /* 绉婚櫎浠呴€傜敤浜庨紶鏍囩殑鎮仠鏁堟灉 */
+            /* 移除仅适用于鼠标的悬停效果 */
             .form-control:hover {
                 transform: none;
             }
             
-            /* 璋冩暣閫夋嫨妗嗙殑涓嬫媺绠ご灏哄 */
+            /* 调整选择框的下拉箭头尺寸 */
             .form-control {
                 background-size: 20px;
                 background-position: right 10px center;
@@ -1364,16 +1364,16 @@
     </style>
 </head>
 <body>
-    <!-- 娣诲姞绮掑瓙鑳屾櫙鐢诲竷 -->
+    <!-- 添加粒子背景画布 -->
     <canvas id="particles-canvas"></canvas>
     
     <div class="container">
-        <!-- 瑁呴グ鍏冪礌 -->
+        <!-- 装饰元素 -->
         <div class="ear-icon-decoration"></div>
         <div class="brain-icon-decoration"></div>
         
         <header class="header">
-            <!-- 澶撮儴鍥炬爣 -->
+            <!-- 头部图标 -->
             <div class="header-icon-container">
                 <div class="pulse-rings">
                     <div class="pulse-ring"></div>
@@ -1387,7 +1387,7 @@
             <h1>High-Frequency Hearing Loss Prediction</h1>
             <p>Personalized high-frequency hearing loss risk prediction system based on machine learning model. This prediction is for reference only. If you have any concerns, please seek medical attention in time.</p>
             
-            <!-- 鍚姏鎹熷け鍥捐〃瑁呴グ -->
+            <!-- 听力损失图表装饰 -->
             <div class="hearing-chart">
                 <div class="chart-bar"></div>
                 <div class="chart-bar"></div>
@@ -1398,7 +1398,7 @@
                 <div class="chart-bar"></div>
             </div>
             
-            <!-- 鍚姏娉㈠舰鍔ㄧ敾 -->
+            <!-- 听力波形动画 -->
             <div class="sound-wave">
                 <span></span>
                 <span></span>
@@ -1432,7 +1432,7 @@
             </div>
         </header>
 
-        <!-- 绗竴閮ㄥ垎锛氬熀鏈俊鎭?-->
+        <!-- 第一部分：基本信息 -->
         <div class="form-section">
             <h2>
                 <div class="section-icon"><i class="fas fa-user-md"></i></div>
@@ -1504,7 +1504,7 @@
                 </div>
             </div>
         </div>
-		        <!-- 绗簩閮ㄥ垎锛氱敓娲讳範鎯?-->
+		        <!-- 第二部分：生活习惯 -->
         <div class="form-section">
             <h2>
                 <div class="section-icon"><i class="fas fa-walking"></i></div>
@@ -1534,7 +1534,7 @@
                         <option value="1">5-7 days per week</option>
                         <option value="2">3-4 days per week</option>
                         <option value="3">1-2 days per week</option>
-                        <option value="4">鈮? days per month</option>
+                        <option value="4">≤3 days per month</option>
                         <option value="5">Never eat</option>
                     </select>
                 </div>
@@ -1567,7 +1567,7 @@
             </div>
         </div>
 
-        <!-- 绗笁閮ㄥ垎锛氬仴搴风姸鍐?-->
+        <!-- 第三部分：健康状况 -->
         <div class="form-section">
             <h2>
                 <div class="section-icon"><i class="fas fa-notes-medical"></i></div>
@@ -1590,7 +1590,7 @@
                 <div class="form-group">
                     <label for="tinnitus">
                         <iconify-icon icon="fa-solid:volume-up" style="color: #4a90e2;"></iconify-icon>
-                        Tinnitus Duration (鈮?5 minutes/year)
+                        Tinnitus Duration (≥ 5 minutes/year)
                     </label>
                     <select id="tinnitus" class="form-control" required>
                         <option value="">Select Tinnitus Status</option>
@@ -1607,8 +1607,8 @@
                     <select id="hbp" class="form-control" required>
                         <option value="">Select Systolic Blood Pressure</option>
                         <option value="0">
-                            Systolic锛?30 mmHg
-                            Diastolic锛?0mmHg
+                            Systolic＜130 mmHg
+                            Diastolic＜80mmHg
                         </option>
                         <option value="1">
                             Systolic: 130-139 mmHg
@@ -1619,17 +1619,17 @@
                             Diastolic: 90-99 mmHg
                         </option>
                         <option value="3">
-                            Systolic: 鈮?60 mmHg
-                            Diastolic: 鈮?00 mmHg
+                            Systolic: ≥160 mmHg
+                            Diastolic: ≥100 mmHg
                         </option>
                     </select>
                 </div>
 
-                <!-- 娣诲姞涓€涓┖鐨?div 鍏冪礌锛屼互濉厖 Medical History 鏍囩椤电殑绌虹己 -->
+                <!-- 添加一个空的 div 元素，以填充 Medical History 标签页的空缺 -->
                 <div class="form-group"></div>
             </div>
         </div>
-		        <!-- 绗洓閮ㄥ垎锛?涓村簥娴嬭瘯缁撴灉 -->
+		        <!-- 第四部分： 临床测试结果 -->
         <div class="form-section">
             <h2>
                 <div class="section-icon"><i class="fas fa-vial"></i></div>
@@ -1645,7 +1645,7 @@
                         <option value="">Select Triglyceride Level</option>
                         <option value="0">&lt; 1.7</option>
                         <option value="1">1.7 - 2.3</option>
-                        <option value="2">鈮?2.3</option>
+                        <option value="2">≥ 2.3</option>
                     </select>
                 </div>
 
@@ -1658,7 +1658,7 @@
                         <option value="">Select Cholesterol Level</option>
                         <option value="0">&lt; 5.2</option>
                         <option value="1">5.2 - 6.2</option>
-                        <option value="2">鈮?6.2</option>
+                        <option value="2">≥ 6.2</option>
                     </select>
                 </div>
 
@@ -1671,7 +1671,7 @@
                         <option value="">Select Fasting Blood Glucose Level</option>
                         <option value="0">&lt; 5.6</option>
                         <option value="1">5.6 - 6.9</option>
-                        <option value="2">鈮?7.0</option>
+                        <option value="2">≥ 7.0</option>
                     </select>
                 </div>
 
@@ -1684,13 +1684,13 @@
                         <option value="">Select Body Mass Index Level</option>
                         <option value="0">&lt; 18.5</option>
                         <option value="1">18.5 - 24.9</option>
-                        <option value="2">鈮?5</option>
+                        <option value="2">≥25</option>
                     </select>
                 </div>
             </div>
         </div>
 
-        <!-- 鎻愪氦鎸夐挳 - 灞呬腑璁剧疆 -->
+        <!-- 提交按钮 - 居中设置 -->
         <div class="submit-btn-container">
             <button class="submit-btn" onclick="predict()">
                 <i class="fas fa-stethoscope"></i>
@@ -1698,9 +1698,9 @@
             </button>
         </div>
 
-        <!-- 缁撴灉鏄剧ず鍖哄煙 -->
+        <!-- 结果显示区域 -->
         <div class="result-container" id="result">
-            <!-- 椋庨櫓浠〃鐩?-->
+            <!-- 风险仪表盘 -->
             <div class="risk-meter-container">
                 <div class="medical-badge">
                     <i class="fas fa-heartbeat"></i>
@@ -1791,7 +1791,7 @@
         </div>
     </div>
 
-    <!-- 鎸夐『搴忓姞杞芥墍闇€鏂囦欢 -->
+    <!-- 按顺序加载所需文件 -->
     <script src="model.js"></script>
     <script src="script.js"></script>
     <script>
@@ -1807,12 +1807,12 @@
             console.log('All components loaded successfully.');
         });
         
-        // 绮掑瓙鑳屾櫙鏁堟灉
+        // 粒子背景效果
         document.addEventListener('DOMContentLoaded', function() {
             const canvas = document.getElementById('particles-canvas');
             const ctx = canvas.getContext('2d');
             
-            // 璁剧疆鐢诲竷澶у皬
+            // 设置画布大小
             function resizeCanvas() {
                 canvas.width = window.innerWidth;
                 canvas.height = window.innerHeight;
@@ -1821,12 +1821,12 @@
             resizeCanvas();
             window.addEventListener('resize', resizeCanvas);
             
-            // 绮掑瓙灞炴€?
+            // 粒子属性
             const particlesArray = [];
             const numberOfParticles = 100;
             const colors = ['rgba(74, 144, 226, 0.5)', 'rgba(247, 183, 51, 0.5)'];
             
-            // 榧犳爣浣嶇疆
+            // 鼠标位置
             let mouse = {
                 x: null,
                 y: null,
@@ -1838,7 +1838,7 @@
                 mouse.y = event.y;
             });
             
-            // 绮掑瓙绫?
+            // 粒子类
             class Particle {
                 constructor() {
                     this.x = Math.random() * canvas.width;
@@ -1849,12 +1849,12 @@
                     this.color = colors[Math.floor(Math.random() * colors.length)];
                 }
                 
-                // 鏇存柊绮掑瓙浣嶇疆
+                // 更新粒子位置
                 update() {
                     this.x += this.speedX;
                     this.y += this.speedY;
                     
-                    // 杈圭晫妫€鏌?
+                    // 边界检查
                     if (this.x < 0 || this.x > canvas.width) {
                         this.speedX = -this.speedX;
                     }
@@ -1862,7 +1862,7 @@
                         this.speedY = -this.speedY;
                     }
                     
-                    // 榧犳爣浜や簰
+                    // 鼠标交互
                     const dx = mouse.x - this.x;
                     const dy = mouse.y - this.y;
                     const distance = Math.sqrt(dx * dx + dy * dy);
@@ -1876,12 +1876,12 @@
                         this.speedY += forceDirectionY * force * 0.6;
                     }
                     
-                    // 闄愬埗閫熷害
+                    // 限制速度
                     this.speedX = Math.max(-2, Math.min(2, this.speedX));
                     this.speedY = Math.max(-2, Math.min(2, this.speedY));
                 }
                 
-                // 缁樺埗绮掑瓙
+                // 绘制粒子
                 draw() {
                     ctx.beginPath();
                     ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
@@ -1890,14 +1890,14 @@
                 }
             }
             
-            // 鍒濆鍖栫矑瀛?
+            // 初始化粒子
             function init() {
                 for (let i = 0; i < numberOfParticles; i++) {
                     particlesArray.push(new Particle());
                 }
             }
             
-            // 杩炴帴绮掑瓙
+            // 连接粒子
             function connect() {
                 for (let a = 0; a < particlesArray.length; a++) {
                     for (let b = a; b < particlesArray.length; b++) {
@@ -1917,7 +1917,7 @@
                 }
             }
             
-            // 鍔ㄧ敾寰幆
+            // 动画循环
             function animate() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 
@@ -1933,7 +1933,7 @@
             init();
             animate();
             
-            // 鍗＄墖鍔ㄧ敾鏁堟灉
+            // 卡片动画效果
             function checkVisibility() {
                 const formSections = document.querySelectorAll('.form-section');
                 const windowHeight = window.innerHeight;
@@ -1947,43 +1947,43 @@
                 });
             }
             
-            // 鍒濆妫€鏌?
+            // 初始检查
             setTimeout(checkVisibility, 100);
             
-            // 婊氬姩鏃舵鏌?
+            // 滚动时检查
             window.addEventListener('scroll', checkVisibility);
         });
 
-        // 娣诲姞鐐瑰嚮娉㈢汗鏁堟灉
+        // 添加点击波纹效果
         document.querySelector('.submit-btn').addEventListener('click', function(e) {
             const rippleContainer = this.querySelector('.submit-btn-ripple');
             const rect = this.getBoundingClientRect();
             
-            // 娓呴櫎涔嬪墠鐨勬尝绾?
+            // 清除之前的波纹
             rippleContainer.innerHTML = '';
             
-            // 鍒涘缓鏂版尝绾?
+            // 创建新波纹
             const ripple = document.createElement('span');
             ripple.className = 'ripple';
             ripple.style.width = ripple.style.height = Math.max(rect.width, rect.height) * 2 + 'px';
             ripple.style.left = e.clientX - rect.left - Math.max(rect.width, rect.height) + 'px';
             ripple.style.top = e.clientY - rect.top - Math.max(rect.width, rect.height) + 'px';
             
-            // 娣诲姞鍒板鍣?
+            // 添加到容器
             rippleContainer.appendChild(ripple);
             
-            // 瀹氭椂绉婚櫎娉㈢汗鍏冪礌
+            // 定时移除波纹元素
             setTimeout(() => {
                 ripple.remove();
             }, 800);
         });
         
-        // 涓鸿〃鍗曞厓绱犳坊鍔犳粴鍔ㄥ姩鐢绘晥鏋?
+        // 为表单元素添加滚动动画效果
         document.addEventListener('DOMContentLoaded', function() {
-            // 鑾峰彇鎵€鏈夎〃鍗曞尯鍧?
+            // 获取所有表单区块
             const formSections = document.querySelectorAll('.form-section');
             
-            // 娣诲姞IntersectionObserver鏉ユ娴嬪厓绱犳槸鍚﹁繘鍏ヨ鍙?
+            // 添加IntersectionObserver来检测元素是否进入视口
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -1996,24 +1996,24 @@
                 threshold: 0.2
             });
             
-            // 鍒濆璁剧疆鍜岃瀵?
+            // 初始设置和观察
             formSections.forEach(section => {
-                // 璁剧疆鍒濆鐘舵€?
+                // 设置初始状态
                 section.style.opacity = '0';
                 section.style.transform = 'translateZ(-20px) translateY(20px)';
                 section.style.transition = 'all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
                 
-                // 寮€濮嬭瀵?
+                // 开始观察
                 observer.observe(section);
             });
             
-            // 涓轰笅鎷夎彍鍗曢€夋嫨娣诲姞鏁堟灉
+            // 为下拉菜单选择添加效果
             const selects = document.querySelectorAll('select.form-control');
             selects.forEach(select => {
                 select.addEventListener('change', function() {
                     this.classList.add('selected');
                     
-                    // 娣诲姞閫変腑鍚庣殑鍔ㄧ敾鏁堟灉
+                    // 添加选中后的动画效果
                     const animation = this.animate(
                         [
                             { transform: 'translateY(-2px) scale(1.02)', boxShadow: '0 8px 20px rgba(74, 144, 226, 0.15)' },
@@ -2031,9 +2031,6 @@
                 });
             });
         });
-
-        // 淇敼椋庨櫓鎸囬拡鍔ㄧ敾鍜岄娴嬪嚱鏁?
-        // 使用外部JS中的predict函数 
     </script>
 </body>
 </html>
