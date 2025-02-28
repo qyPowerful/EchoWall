@@ -93,7 +93,37 @@ const REQUIRED_FIELDS = [
     'tinnitus', 'tg', 'cho', 'hbp', 'glu', 'drink', 'bmi' // 添加 HBP, GLU, Drink, BMI_rank
 ];
 
+// 定义每个步骤对应的字段 ID
+const STEP_FIELDS = {
+    1: ['age_rank', 'sex', 'Education', 'race'], // Basic Information
+    2: ['activities', 'dairy', 'smoke'], // Lifestyle Habits
+    3: ['hearing', 'tinnitus', 'tg', 'cho'], // Medical History
+    4: ['hbp', 'glu', 'drink', 'bmi'] // Clinical Test Results
+};
+
 // ===== 第三步：辅助函数定义 =====
+// 更新进度指示器
+function updateProgressIndicator(step) {
+    console.log('更新进度指示器:', step);
+    document.querySelectorAll('.step-number').forEach((element, index) => {
+        if (index + 1 <= step) {
+            element.classList.add('active');
+            // 确保对应的progress-step也被标记为active
+            const parentStep = element.closest('.progress-step');
+            if (parentStep && !parentStep.classList.contains('active')) {
+                parentStep.classList.add('active');
+            }
+        } else {
+            element.classList.remove('active');
+            // 移除对应的progress-step的active类
+            const parentStep = element.closest('.progress-step');
+            if (parentStep && parentStep.classList.contains('active')) {
+                parentStep.classList.remove('active');
+            }
+        }
+    });
+}
+
 // 检查所有必填字段
 function validateInputs() {
     console.log('验证输入字段...');
@@ -208,6 +238,22 @@ function enableSubmitButton() {
     }
 }
 
+// 检查表单部分是否完成
+function checkFormSectionCompletion() {
+    // 检查每个步骤是否完成
+    for (let step = 1; step <= 4; step++) {
+        const stepFields = STEP_FIELDS[step];
+        const stepComplete = stepFields.every(id => {
+            const element = document.getElementById(id);
+            return element && element.value !== '';
+        });
+
+        if (stepComplete) {
+            updateProgressIndicator(step);
+        }
+    }
+}
+
 // ===== 第四步：初始化 =====
 // 加载mappings数据
 document.addEventListener('DOMContentLoaded', function() {
@@ -246,4 +292,17 @@ document.addEventListener('DOMContentLoaded', function() {
             // 启用提交按钮
             enableSubmitButton();
         });
+
+    // 为所有select添加change事件监听器
+    document.querySelectorAll('select').forEach(select => {
+        select.addEventListener('change', function() {
+            checkFormSectionCompletion();
+        });
+    });
+
+    // 初始化时也检查一次表单完成情况
+    checkFormSectionCompletion();
 });
+
+// 导出更新进度指示器函数
+window.updateProgressIndicator = updateProgressIndicator;
