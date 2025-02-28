@@ -2908,13 +2908,51 @@
                 display: none;
             }
         }
-    </style>
-    
-    <!-- 步骤显示器移动端适配专用样式 -->
-    <style>
-        /* 移动端步骤显示器适配 */
+
+        /* 移动设备选择框优化 */
         @media only screen and (max-width: 768px) {
-            /* 优化步骤显示器的整体布局 */
+            /* 已有的媒体查询样式 */
+            
+            /* 移动端选择框优化 */
+            .mobile-select {
+                -webkit-appearance: menulist; /* 在iOS上使用原生外观 */
+                appearance: menulist;
+                background-image: none !important; /* 移除自定义箭头 */
+                padding-right: 10px !important; /* 避免文本被截断 */
+            }
+            
+            /* 确保点击区域足够大 */
+            .form-group {
+                margin-bottom: 20px;
+            }
+            
+            /* 提高触摸区域大小 */
+            select.form-control {
+                height: 44px; /* 增加高度以便于点击 */
+                font-size: 16px !important; /* 防止iOS上自动缩放 */
+            }
+            
+            /* 选项样式优化 */
+            select.form-control option {
+                padding: 10px;
+                font-size: 16px;
+            }
+        }
+        
+        /* 更小屏幕的适配 */
+        @media only screen and (max-width: 480px) {
+            /* 已有的媒体查询样式 */
+            
+            /* 进一步优化小屏幕选择框 */
+            select.form-control {
+                width: 100%; /* 确保占满容器宽度 */
+                max-width: 100%;
+            }
+        }
+
+        /* 移动设备适配样式 */
+        @media only screen and (max-width: 768px) {
+            /* 步骤显示器优化 */
             .progress-steps {
                 display: flex;
                 flex-wrap: wrap;
@@ -2923,7 +2961,7 @@
                 width: 100%;
             }
             
-            /* 调整每个步骤的宽度，确保在一行能显示两个 */
+            /* 调整每个步骤的宽度 */
             .progress-step {
                 width: 45%;
                 margin: 0 2% 10px;
@@ -2931,122 +2969,36 @@
                 flex-shrink: 0;
             }
             
-            /* 调整步骤数字的大小和位置 */
+            /* 调整步骤数字大小和位置 */
             .progress-step .step-number {
                 width: 35px;
                 height: 35px;
                 font-size: 14px;
-                margin: 0 auto 5px;
             }
             
-            /* 调整步骤标签的样式 */
-            .progress-step .step-label {
-                font-size: 12px;
-                line-height: 1.2;
-                text-align: center;
-                white-space: normal;
-                max-width: 100%;
-                padding: 0 5px;
-            }
-            
-            /* 隐藏或调整连接线 */
-            .progress-step .step-label::after {
-                display: none;
-            }
-            
-            /* 优化表单布局 */
-            .form-grid {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-            
-            /* 调整表单控件样式 */
-            .form-control {
-                padding: 10px;
-                font-size: 14px;
-            }
-            
-            .form-group label {
-                font-size: 14px;
-                margin-bottom: 5px;
-            }
-            
-            /* 优化预测按钮样式 */
-            .prediction-btn {
-                min-width: 200px;
-                padding: 12px 20px;
-                font-size: 16px;
-            }
-            
-            /* 调整医疗动画位置 */
-            .medical-animation {
-                margin-top: 15px;
-                transform: scale(0.9);
-            }
-        }
-        
-        /* 更小屏幕的适配 */
-        @media only screen and (max-width: 480px) {
-            /* 步骤显示器优化 */
-            .progress-steps {
-                margin: 10px 0;
-            }
-            
-            .progress-step {
-                width: 45%;
-                margin: 0 2% 8px;
-            }
-            
-            .progress-step .step-number {
-                width: 30px;
-                height: 30px;
-                font-size: 12px;
-            }
-            
-            .progress-step .step-number iconify-icon {
-                font-size: 14px;
-            }
-            
-            .progress-step .step-label {
-                font-size: 10px;
-                max-width: 90px;
-                margin: 0 auto;
-            }
-            
-            /* 表单控件进一步优化 */
-            .form-control {
-                padding: 8px;
-                font-size: 13px;
-            }
-            
-            .form-group label {
-                font-size: 13px;
-            }
-            
-            /* 小屏幕预测按钮优化 */
-            .prediction-btn {
-                min-width: 180px;
-                padding: 10px 15px;
-                font-size: 14px;
-            }
-            
-            /* 调整小屏幕医疗动画 */
-            .medical-animation {
-                transform: scale(0.8);
-            }
-            
-            .hearing-pulse {
-                width: 45px;
-                height: 45px;
-            }
-            
-            .sound-graph {
-                margin-left: 10px;
-            }
-            
-            .sound-bar {
-                width: 3px;
-                margin: 0 2px;
+            /* 移动端选择框专用样式 */
+            @media only screen and (max-width: 768px) {
+                /* 移动端选择框优化 */
+                select.form-control {
+                    height: 44px !important; /* 增加高度便于点击 */
+                    font-size: 16px !important; /* 防止iOS上自动缩放 */
+                    -webkit-appearance: menulist !important; /* 在iOS上使用原生外观 */
+                    appearance: menulist !important;
+                    background-image: none !important; /* 移除自定义箭头 */
+                    padding-right: 10px !important; /* 避免文本被截断 */
+                    width: 100% !important; /* 确保宽度合适 */
+                }
+                
+                /* 确保下拉选项显示正常 */
+                select.form-control option {
+                    padding: 8px !important;
+                    font-size: 16px !important;
+                }
+                
+                /* 优化表单组样式 */
+                .form-group {
+                    margin-bottom: 20px !important;
+                }
             }
         }
     </style>
@@ -3469,6 +3421,9 @@
                                 <div class="gauge-mark"></div>
                                 <div class="gauge-mark"></div>
                                 <div class="gauge-mark"></div>
+                                <div class="gauge-mark"></div>
+                                <div class="gauge-mark"></div>
+                                <div class="gauge-mark"></div>
                             </div>
                             <div class="risk-zones">
                                 <div class="risk-zone low">LOW</div>
@@ -3831,29 +3786,7 @@
                 observer.observe(section);
             });
             
-            // 为下拉菜单选择添加效果
-            const selects = document.querySelectorAll('select.form-control');
-            selects.forEach(select => {
-                select.addEventListener('change', function() {
-                    this.classList.add('selected');
-                    
-                    // 添加选中后的动画效果
-                    const animation = this.animate(
-                        [
-                            { transform: 'translateY(-2px) scale(1.02)', boxShadow: '0 8px 20px rgba(74, 144, 226, 0.15)' },
-                            { transform: 'translateY(-2px)' }
-                        ], 
-                        { 
-                            duration: 500,
-                            easing: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)' 
-                        }
-                    );
-                    
-                    animation.onfinish = () => {
-                        this.style.transform = 'translateY(-2px)';
-                    };
-                });
-            });
+            // 注意：select元素的事件处理已集中到下方的统一函数中
         });
 
         // 页面加载完成后进行的增强
@@ -3935,11 +3868,13 @@
             }
         });
 
-        // 添加互动效果
+        // 添加互动效果 - 集中处理所有表单控件交互逻辑
         document.addEventListener('DOMContentLoaded', function() {
             // 获取所有表单控件和提交按钮
             const formControls = document.querySelectorAll('.form-control');
             const submitBtn = document.querySelector('.submit-btn');
+            const stepNumbers = document.querySelectorAll('.step-number'); 
+            const progressSteps = document.querySelectorAll('.progress-step');
             
             // 添加表单控件的交互效果
             formControls.forEach(control => {
@@ -3962,54 +3897,177 @@
                         ripple.remove();
                     }, 600);
                 });
+                
+                // 添加焦点效果
+                control.addEventListener('focus', function() {
+                    this.parentElement.classList.add('focused');
+                });
+                
+                control.addEventListener('blur', function() {
+                    this.parentElement.classList.remove('focused');
+                    if (this.value) {
+                        this.parentElement.classList.add('has-value');
+                    } else {
+                        this.parentElement.classList.remove('has-value');
+                    }
+                });
+                
+                // 添加输入验证效果
+                control.addEventListener('input', function() {
+                    if (this.validity.valid) {
+                        this.parentElement.classList.remove('invalid');
+                        this.parentElement.classList.add('valid');
+                    } else {
+                        this.parentElement.classList.remove('valid');
+                        if (this.value) {
+                            this.parentElement.classList.add('invalid');
+                        } else {
+                            this.parentElement.classList.remove('invalid');
+                        }
+                    }
+                });
             });
             
-            // 添加提交按钮的交互效果
+            // 为下拉菜单选择添加效果（集中处理，避免重复）
+            const selects = document.querySelectorAll('select.form-control');
+            selects.forEach(select => {
+                // 移除可能已存在的事件监听器
+                const clone = select.cloneNode(true);
+                select.parentNode.replaceChild(clone, select);
+                
+                // 添加新的事件监听器
+                clone.addEventListener('change', function() {
+                    this.classList.add('selected');
+                    
+                    // 添加选中后的动画效果
+                    const animation = this.animate(
+                        [
+                            { transform: 'translateY(-2px) scale(1.02)', boxShadow: '0 8px 20px rgba(74, 144, 226, 0.15)' },
+                            { transform: 'translateY(-2px)' }
+                        ], 
+                        { 
+                            duration: 500,
+                            easing: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)' 
+                        }
+                    );
+                    
+                    animation.onfinish = () => {
+                        this.style.transform = 'translateY(-2px)';
+                    };
+                });
+                
+                // 移动端触摸优化
+                if ('ontouchstart' in window) {
+                    // 为移动设备添加特定的样式和行为
+                    clone.classList.add('mobile-select');
+                    
+                    // 防止触摸事件冲突
+                    clone.addEventListener('touchstart', function(e) {
+                        // 允许默认行为，但阻止可能的多次触发
+                        e.stopPropagation();
+                    }, {passive: true});
+                }
+            });
+            
+            // 步骤指示器交互效果
+            stepNumbers.forEach(stepNumber => {
+                stepNumber.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-3px) scale(1.1)';
+                    this.style.boxShadow = '0 5px 15px rgba(0,0,0,0.1)';
+                });
+                
+                stepNumber.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                    this.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)';
+                });
+            });
+            
+            // 提交按钮交互效果
             if (submitBtn) {
-                // 悬停特效
                 submitBtn.addEventListener('mouseenter', function() {
-                    this.classList.add('hover-effect');
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.boxShadow = '0 5px 20px rgba(74, 144, 226, 0.4)';
                 });
                 
                 submitBtn.addEventListener('mouseleave', function() {
-                    this.classList.remove('hover-effect');
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 2px 10px rgba(74, 144, 226, 0.2)';
                 });
                 
-                // 点击波纹效果
                 submitBtn.addEventListener('click', function(e) {
-                    const rect = this.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
+                    e.preventDefault();
+                    const form = document.getElementById('predictionForm');
                     
-                    const wave = document.createElement('span');
-                    wave.classList.add('submit-btn-wave');
-                    wave.style.left = `${x}px`;
-                    wave.style.top = `${y}px`;
-                    
-                    this.appendChild(wave);
-                    
-                    // 添加动画类
-                    setTimeout(() => {
-                        wave.classList.add('animate');
-                    }, 1);
-                    
-                    // 动画结束后移除波纹元素
-                    setTimeout(() => {
-                        wave.remove();
-                    }, 800);
+                    if (form.checkValidity()) {
+                        // 获取预测结果
+                        calculatePrediction();
+                        
+                        // 添加提交成功的动画
+                        this.classList.add('success');
+                        setTimeout(() => {
+                            this.classList.remove('success');
+                        }, 2000);
+                    } else {
+                        // 标记所有未填写的必填字段
+                        const invalidFields = form.querySelectorAll(':invalid');
+                        invalidFields.forEach(field => {
+                            field.parentElement.classList.add('invalid');
+                            // 添加抖动动画
+                            field.animate(
+                                [
+                                    { transform: 'translateX(0)' },
+                                    { transform: 'translateX(-5px)' },
+                                    { transform: 'translateX(5px)' },
+                                    { transform: 'translateX(-3px)' },
+                                    { transform: 'translateX(3px)' },
+                                    { transform: 'translateX(0)' }
+                                ],
+                                {
+                                    duration: 400,
+                                    easing: 'ease-in-out'
+                                }
+                            );
+                        });
+                    }
                 });
             }
             
-            // 步骤指示器交互效果
-            const stepNumbers = document.querySelectorAll('.step-number');
-            stepNumbers.forEach(step => {
+            // 步骤条悬停效果
+            progressSteps.forEach(step => {
                 step.addEventListener('mouseenter', function() {
-                    this.style.transform = 'scale(1.1)';
+                    this.style.transform = 'translateY(-3px)';
                 });
                 
                 step.addEventListener('mouseleave', function() {
-                    this.style.transform = 'scale(1)';
+                    this.style.transform = 'translateY(0)';
                 });
+            });
+            
+            // 获取所有表单区块
+            const formSections = document.querySelectorAll('.form-section');
+            
+            // 添加IntersectionObserver来检测元素是否进入视口
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.transform = 'translateZ(0px) translateY(0)';
+                        entry.target.style.opacity = '1';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.2
+            });
+            
+            // 初始设置和观察
+            formSections.forEach(section => {
+                // 设置初始状态
+                section.style.opacity = '0';
+                section.style.transform = 'translateZ(-20px) translateY(20px)';
+                section.style.transition = 'all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                
+                // 开始观察
+                observer.observe(section);
             });
         });
     </script>
