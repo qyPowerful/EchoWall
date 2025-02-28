@@ -4285,5 +4285,93 @@
             animate();
         });
     </script>
+
+    <script>
+        // 更新步骤指示器的函数
+        function updateStepIndicator(completedIndex) {
+            // 获取所有步骤和步骤指示器
+            const progressSteps = document.querySelectorAll('.progress-step');
+            
+            // 更新步骤状态
+            progressSteps.forEach((step, index) => {
+                // 移除所有active类
+                step.classList.remove('active');
+                
+                // 添加completed类到已完成步骤
+                if (index <= completedIndex) {
+                    step.classList.add('completed');
+                }
+                
+                // 添加active类到当前步骤
+                if (index === completedIndex + 1) {
+                    step.classList.add('active');
+                }
+            });
+        }
+        
+        // 监听表单控件变化以检查步骤完成
+        document.addEventListener('DOMContentLoaded', function() {
+            // 创建一个全局变量来跟踪当前完成的步骤索引
+            window.currentCompletedStep = 0;
+            
+            // 获取所有表单控件
+            const formControls = document.querySelectorAll('.form-control');
+            
+            // 检查表单段落完成情况的函数
+            function checkFormSectionCompletion() {
+                // 获取所有表单段落
+                const formSections = document.querySelectorAll('.form-section');
+                
+                // 遍历表单段落
+                for (let i = 0; i < formSections.length; i++) {
+                    // 获取当前段落的表单控件
+                    const sectionControls = formSections[i].querySelectorAll('.form-control[required]');
+                    
+                    // 检查是否所有必填字段都已填写
+                    let allFilled = true;
+                    sectionControls.forEach(control => {
+                        if (!control.value) {
+                            allFilled = false;
+                        }
+                    });
+                    
+                    // 如果发现一个未完成的段落，更新到该索引
+                    if (!allFilled) {
+                        if (window.currentCompletedStep !== i - 1) {
+                            window.currentCompletedStep = i - 1;
+                            updateStepIndicator(window.currentCompletedStep);
+                        }
+                        return;
+                    }
+                }
+                
+                // 如果所有段落都已完成
+                if (window.currentCompletedStep !== formSections.length - 1) {
+                    window.currentCompletedStep = formSections.length - 1;
+                    updateStepIndicator(window.currentCompletedStep);
+                }
+            }
+            
+            // 为所有表单控件添加更改事件监听器
+            formControls.forEach(control => {
+                control.addEventListener('change', function() {
+                    // 检查表单完成情况并更新步骤
+                    checkFormSectionCompletion();
+                });
+            });
+            
+            // 设置初始步骤（让第一步为活动状态）
+            setTimeout(function() {
+                // 初始化第一个步骤为活动状态
+                const firstStep = document.querySelector('.progress-step');
+                if (firstStep) {
+                    firstStep.classList.add('active');
+                }
+                
+                // 进行初始检查
+                checkFormSectionCompletion();
+            }, 100);
+        });
+    </script>
 </body>
 </html>
